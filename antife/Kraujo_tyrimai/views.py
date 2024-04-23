@@ -8,7 +8,7 @@ from django.utils import timezone
 import datetime
 
 @login_required
-def create_kraujo_tyrimas(request):
+def create_komandos(request):
     if request.method == 'POST':
         data = request.POST.get('data')
         fenilalaninas = request.POST.get('fenilalaninas')
@@ -16,17 +16,17 @@ def create_kraujo_tyrimas(request):
         # Check if both data and fenilalaninas are empty
         if not data and not fenilalaninas:
             messages.error(request, 'Užpildykite formą')
-            return redirect('kraujo_tyrimai:kraujotyrview')
+            return redirect('kraujo_tyrimai:komandaview')
         
         # Check if data is empty
         if not data:
             messages.error(request, 'Įveskite datą')
-            return redirect('kraujo_tyrimai:kraujotyrview')
+            return redirect('kraujo_tyrimai:komandaview')
         
         # Check if fenilalaninas is empty
         if not fenilalaninas:
             messages.error(request, 'Įveskite fenilalanino kiekį')
-            return redirect('kraujo_tyrimai:kraujotyrview')
+            return redirect('kraujo_tyrimai:komandaview')
 
         # Fetch the corresponding Naudotojai instance
         naudotojai_instance = Naudotojai.objects.get(user=request.user)
@@ -37,7 +37,7 @@ def create_kraujo_tyrimas(request):
         if selected_date > today:
             # If the selected date is greater than today's date, display an error message
             messages.error(request, 'Pasirinkta negalima data.')
-            return redirect('kraujo_tyrimai:kraujotyrview')
+            return redirect('kraujo_tyrimai:komandaview')
         
         # Check if a Kraujotyr already exists for the given date and user
         existing_kraujotyr = Kraujo_tyrimai.objects.filter(Q(data=data) & Q(fk_Naudotojasid_Naudotojas=naudotojai_instance)).exists()
@@ -50,17 +50,17 @@ def create_kraujo_tyrimas(request):
             # Add success message
             messages.success(request, 'Kraujo tyrimas sėkmingai pridėtas.')
             # Redirect to the 'kraujotyrview' view after creating the Kraujo Tyrimas
-            return redirect('kraujo_tyrimai:kraujotyrview')
+            return redirect('kraujo_tyrimai:komandaview')
     
     # If the request method is not POST or if there was an error, render the 'kraujotyrview' template
-    return kraujotyrview(request)
+    return komandaview(request)
 
 
 
 
 
 @login_required
-def kraujotyrview(request):
+def komandaview(request):
     # Filter Kraujo_tyrimai instances by the current authenticated user
     kraujo_tyrimai_qs = Kraujo_tyrimai.objects.filter(fk_Naudotojasid_Naudotojas__user=request.user)
     

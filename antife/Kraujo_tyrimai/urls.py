@@ -1,10 +1,10 @@
 from django.urls import path
 from . import views
-from .views import create_kraujo_tyrimas
+from .views import create_komandos
 
-app_name = 'kraujo_tyrimai'
+app_name = 'komandos'
 
 urlpatterns = [
-    path('', views.kraujotyrview, name='kraujotyrview'),
-    path('create_kraujo_tyrimas/', create_kraujo_tyrimas, name='create_kraujo_tyrimas'),
+    path('', views.komandaview, name='komandaview'),
+    path('create_komandos/', create_komandos, name='create_komandos'),
 ]
