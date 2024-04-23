@@ -8,10 +8,24 @@
 {% block content %}
     <style>
         .form-container {
-            margin-top: 20px; /* Adjust the margin-top value as needed */
+            margin-top: 20px;
         }
         .chart-img {
-            margin-bottom: 20px; /* Adjust the margin-bottom value as needed */
+            margin-bottom: 20px;
+        }
+        /* New styles for the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
         }
     </style>
 
@@ -30,15 +44,49 @@
         <img src="data:image/png;base64, {{chart|safe}}" class="chart-img">
     {% endif %}
     <div class="form-container">
-        <h2>Pridėti komandą</h2>
-        <form method="post" action="{% url 'kraujo_tyrimai:create_komandos' %}">
+        <h2>Sukurti komandą</h2>
+        <form method="post" action="{% url 'kraujo_tyrimai:create_komanda' %}">
             {% csrf_token %}
-            <label for="id_data">Data:</label>
-            <input type="date" name="data" id="id_data">
-            <label for="id_fenilalaninas">Fenilalaninas µmol/l:</label>
-            <input type="number" name="fenilalaninas" id="id_fenilalaninas">
-            <input type="submit" value="Pridėti">
+            <label for="id_pavadinimas">Pavadinimas:</label>
+            <input type="text" name="pavadinimas" id="id_pavadinimas" placeholder="Pavadinimas">
+            <input type="submit" value="Sukurti">
         </form>
     </div>
+    
+    <!-- Update the 'Visos komandos' section in the HTML template -->
+    <h2>Visos komandos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Pavadinimas</th>
+                <th>Veiksmai</th> <!-- Add a header for the actions column -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in all_teams %}
+                <tr>
+                    <td>{{ team.pavadinimas }}</td>
+                    <td>
+                        <a href="{% url 'kraujo_tyrimai:view_team' team.id %}" class="btn btn-primary">View</a>
+                       
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Only my team section -->
+    <h2>Mano komanda</h2>
+{% if user_team %}
+    <p>{{ user_team.pavadinimas }}</p>
+    <!-- Ensure user_team has an id attribute before rendering the delete button -->
+    {% if user_team.id %}
+        <a href="{% url 'kraujo_tyrimai:delete_team' user_team.id %}" class="btn btn-danger">Delete</a>
+    {% endif %}
+{% else %}
+    <p>Jūs neturite jokios komandos</p>
+{% endif %}
+
+
     
 {% endblock %}

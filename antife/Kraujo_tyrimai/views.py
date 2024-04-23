@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from homepage.models import Kraujo_tyrimai, Naudotojai
+from homepage.models import Kraujo_tyrimai, Naudotojai, Komanda
 from django.contrib.auth.decorators import login_required
 from .utils import get_plot
 from django.db.models import Q
@@ -8,52 +8,35 @@ from django.utils import timezone
 import datetime
 
 @login_required
-def create_komandos(request):
+def create_komanda(request):
+    # Check if the user already has a team
+    if Komanda.objects.filter(fk_Naudotojasid_Naudotojas__user=request.user).exists():
+        messages.error(request, 'Jūs jau turite komandą arba esate dalis komandos.')
+        return redirect('kraujo_tyrimai:komandaview')
+
     if request.method == 'POST':
-        data = request.POST.get('data')
-        fenilalaninas = request.POST.get('fenilalaninas')
-        
-        # Check if both data and fenilalaninas are empty
-        if not data and not fenilalaninas:
-            messages.error(request, 'Užpildykite formą')
-            return redirect('kraujo_tyrimai:komandaview')
-        
-        # Check if data is empty
-        if not data:
-            messages.error(request, 'Įveskite datą')
-            return redirect('kraujo_tyrimai:komandaview')
-        
-        # Check if fenilalaninas is empty
-        if not fenilalaninas:
-            messages.error(request, 'Įveskite fenilalanino kiekį')
+        pavadinimas = request.POST.get('pavadinimas')
+        if not pavadinimas:
+            messages.error(request, 'Pavadinimo laukas negali būti tuščias.')
+            return redirect('kraujo_tyrimai:create_komanda')
+
+        naudotojai_instance = Naudotojai.objects.get(user=request.user)
+
+        existing_Team = Komanda.objects.filter(pavadinimas=pavadinimas).exists()
+        if existing_Team:
+            # If a team with the same name already exists, show an error message
+            messages.error(request, 'Komandos pavadinimas užimtas')
+        else:
+            # If the user doesn't have a team and a team with the same name doesn't exist, create a new team
+            Komanda.objects.create(pavadinimas=pavadinimas, fk_Naudotojasid_Naudotojas=naudotojai_instance)
+            # Add success message
+            messages.success(request, 'Komanda sėkmingai sukurta.')
+            # Redirect to the 'komandaview' view after creating the team
             return redirect('kraujo_tyrimai:komandaview')
 
-        # Fetch the corresponding Naudotojai instance
-        naudotojai_instance = Naudotojai.objects.get(user=request.user)
-        
-        # Validate if the selected date is not exceeded over today's date
-        selected_date = datetime.datetime.strptime(data, '%Y-%m-%d').date()
-        today = timezone.now().date()
-        if selected_date > today:
-            # If the selected date is greater than today's date, display an error message
-            messages.error(request, 'Pasirinkta negalima data.')
-            return redirect('kraujo_tyrimai:komandaview')
-        
-        # Check if a Kraujotyr already exists for the given date and user
-        existing_kraujotyr = Kraujo_tyrimai.objects.filter(Q(data=data) & Q(fk_Naudotojasid_Naudotojas=naudotojai_instance)).exists()
-        if existing_kraujotyr:
-            # If a Kraujotyr already exists for the given date and user, show an error message
-            messages.error(request, 'Kraujo tyrimas su šia data jau egzistuoja.')
-        else:
-            # If a Kraujotyr for the given date and user doesn't exist, create a new one
-            Kraujo_tyrimai.objects.create(data=data, fenilalaninas=fenilalaninas, fk_Naudotojasid_Naudotojas=naudotojai_instance)
-            # Add success message
-            messages.success(request, 'Kraujo tyrimas sėkmingai pridėtas.')
-            # Redirect to the 'kraujotyrview' view after creating the Kraujo Tyrimas
-            return redirect('kraujo_tyrimai:komandaview')
-    
-    # If the request method is not POST or if there was an error, render the 'kraujotyrview' template
+    # If the request method is not POST or if there was an error, render the 'komandaview' template
     return komandaview(request)
+
 
 
 
@@ -61,34 +44,44 @@ def create_komandos(request):
 
 @login_required
 def komandaview(request):
-    # Filter Kraujo_tyrimai instances by the current authenticated user
-    kraujo_tyrimai_qs = Kraujo_tyrimai.objects.filter(fk_Naudotojasid_Naudotojas__user=request.user)
-    
-    if not kraujo_tyrimai_qs:
-        # If there are no kraujo tyrimai, render the template without the chart
-        return render(request, 'Kraujotyr.html')
+    # Get all teams from the database
+    all_teams = Komanda.objects.all()
 
-    # Extract x (dates) and y (fenilalaninas) data
-    x = [kraujo_tyrimas.data for kraujo_tyrimas in kraujo_tyrimai_qs]
-    y = [kraujo_tyrimas.fenilalaninas for kraujo_tyrimas in kraujo_tyrimai_qs]
-    
-    # Combine dates and phenylalanine values into tuples
-    data_points = list(zip(x, y))
-    
-    # Sort the data points based on dates
-    sorted_data_points = sorted(data_points, key=lambda tup: tup[0])
-    
-    if not sorted_data_points:
-        # If there are no data points, render the template without the chart
-        return render(request, 'Kraujotyr.html')
+    # Get the team of the currently logged-in user
+    user_team = Komanda.objects.filter(fk_Naudotojasid_Naudotojas__user=request.user).first()
 
-    # Unzip sorted data points into separate lists
-    sorted_dates, sorted_phenylalanine = zip(*sorted_data_points)
-    
-    # Plot the graph
-    chart = get_plot(range(len(sorted_dates)), sorted_phenylalanine, sorted_dates)
+    return render(request, 'Kraujotyr.html', {'all_teams': all_teams, 'user_team': user_team})
 
-    return render(request, 'Kraujotyr.html', {'chart': chart})
+from django.shortcuts import render, get_object_or_404
+from homepage.models import Komanda
+
+def view_team(request, team_id):
+    # Retrieve the team object using the team_id
+    team = get_object_or_404(Komanda, id=team_id)
+
+    # Pass the team object to the template
+    return render(request, 'TeamView.html', {'team': team})
+
+@login_required
+def delete_team(request, team_id):
+    try:
+        team = Komanda.objects.get(pk=team_id)
+        if team.fk_Naudotojasid_Naudotojas.user != request.user:
+            messages.error(request, 'Jūs neturite teisės trinti šios komandos.')
+            return redirect('kraujo_tyrimai:komandaview')
+    except Komanda.DoesNotExist:
+        messages.error(request, 'Komanda nerasta.')
+        return redirect('kraujo_tyrimai:komandaview')
+
+    if request.method == 'POST':
+        team.delete()
+        messages.success(request, 'Komanda sėkmingai ištrinta.')
+        return redirect('kraujo_tyrimai:komandaview')
+
+    return render(request, 'confirm_delete_team.html', {'team': team})
+
+
+
 
 
 
