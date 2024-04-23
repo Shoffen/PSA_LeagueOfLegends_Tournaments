@@ -30,8 +30,8 @@
         <img src="data:image/png;base64, {{chart|safe}}" class="chart-img">
     {% endif %}
     <div class="form-container">
-        <h2>Pridėti kraujo tyrimą</h2>
-        <form method="post" action="{% url 'kraujo_tyrimai:create_kraujo_tyrimas' %}">
+        <h2>Pridėti komandą</h2>
+        <form method="post" action="{% url 'kraujo_tyrimai:create_komandos' %}">
             {% csrf_token %}
             <label for="id_data">Data:</label>
             <input type="date" name="data" id="id_data">
