@@ -1,0 +1,20 @@
+
+{% extends 'base.html' %}
+{% block title %}
+    Team Details - {{ team.pavadinimas }}
+{% endblock %}
+{% block content %}
+    <div class="team-details-container">
+        <h1>Team Details</h1>
+        <p><strong>Pavadinimas:</strong> {{ team.pavadinimas }}</p>
+        <!-- Add more details here -->
+        <p><strong>Team Leader:</strong> {{ team.fk_Naudotojasid_Naudotojas.user.username }}</p>
+        <p><strong>Members:</strong></p>
+        <ul>
+            {% for member in team.members.all %}
+                <li>{{ member.user.username }}</li>
+            {% endfor %}
+        </ul>
+        <!-- Add more details as needed -->
+    </div>
+{% endblock %}
