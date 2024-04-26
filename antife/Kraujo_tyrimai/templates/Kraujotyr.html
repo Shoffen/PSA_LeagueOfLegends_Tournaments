@@ -2,7 +2,7 @@
 {% load static %} 
 
 {% block title %}
-    Kraujo Tyrimai
+    List of Teams
 {% endblock %}
 
 {% block content %}
@@ -27,10 +27,13 @@
         th {
             background-color: #f2f2f2;
         }
+        .hidden {
+            display: none; /* Add a CSS class to hide elements */
+        }
     </style>
 
     <link rel="stylesheet" type="text/css" href="{% static 'styles/errors.css' %}">
-    <h1>Kraujo tyrimų sekimas</h1>
+    <h1>List of all teams</h1>
     {% if messages %}
         <div class="error-container">
             {% for message in messages %}
@@ -43,23 +46,50 @@
     {% if chart %}
         <img src="data:image/png;base64, {{chart|safe}}" class="chart-img">
     {% endif %}
-    <div class="form-container">
-        <h2>Sukurti komandą</h2>
-        <form method="post" action="{% url 'kraujo_tyrimai:create_komanda' %}">
-            {% csrf_token %}
-            <label for="id_pavadinimas">Pavadinimas:</label>
-            <input type="text" name="pavadinimas" id="id_pavadinimas" placeholder="Pavadinimas">
-            <input type="submit" value="Sukurti">
-        </form>
-    </div>
+    
+    <!-- Check if the user has a team -->
+    {% if user_team %}
+        <div class="form-container">
+            <h2>My team</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Team Title</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ user_team.pavadinimas }}</td>
+                        <td>
+                            {% if user_team.id %}
+                                <a href="{% url 'kraujo_tyrimai:delete_team' user_team.id %}" class="btn btn-danger">Delete</a>
+                                <a href="{% url 'kraujo_tyrimai:edit_team' user_team.id %}" class="btn btn-primary">Edit</a>
+                                <a href="{% url 'kraujo_tyrimai:view_team' user_team.id %}" class="btn btn-primary">View</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="form-container">
+            <h2>Create a team</h2>
+            <!-- Button to navigate to the create team form -->
+            <a href="{% url 'kraujo_tyrimai:create_team_form' %}" class="btn btn-primary">Create a Team</a>
+        </div>
+    {% endif %}
+    
+    <!-- Creation form -->
+    <div id="createFormContainer" class="form-container hidden"></div>
     
     <!-- Update the 'Visos komandos' section in the HTML template -->
-    <h2>Visos komandos</h2>
+    <h2>All teams</h2>
     <table>
         <thead>
             <tr>
-                <th>Pavadinimas</th>
-                <th>Veiksmai</th> <!-- Add a header for the actions column -->
+                <th>Team Title</th>
+                <th>Possible action</th> <!-- Add a header for the actions column -->
             </tr>
         </thead>
         <tbody>
@@ -68,25 +98,30 @@
                     <td>{{ team.pavadinimas }}</td>
                     <td>
                         <a href="{% url 'kraujo_tyrimai:view_team' team.id %}" class="btn btn-primary">View</a>
-                       
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <!-- Only my team section -->
-    <h2>Mano komanda</h2>
-{% if user_team %}
-    <p>{{ user_team.pavadinimas }}</p>
-    <!-- Ensure user_team has an id attribute before rendering the delete button -->
-    {% if user_team.id %}
-        <a href="{% url 'kraujo_tyrimai:delete_team' user_team.id %}" class="btn btn-danger">Delete</a>
-    {% endif %}
-{% else %}
-    <p>Jūs neturite jokios komandos</p>
-{% endif %}
+    <!-- JavaScript to toggle the creation form -->
+    <script>
+        // Function to toggle between showing/hiding the creation form
+        function toggleCreateForm() {
+            var formContainer = document.getElementById('createFormContainer');
+            formContainer.classList.toggle('hidden');
+            if (!formContainer.innerHTML.trim()) {
+                // Load the creation form if it's not already loaded
+                fetch("{% url 'kraujo_tyrimai:create_team_form' %}")
+                    .then(response => response.text())
+                    .then(data => formContainer.innerHTML = data);
+            }
+        }
 
-
-    
+        // Add event listener to the button
+        document.getElementById('showCreateFormBtn').addEventListener('click', function() {
+            // Show the creation form
+            toggleCreateForm();
+        });
+    </script>
 {% endblock %}

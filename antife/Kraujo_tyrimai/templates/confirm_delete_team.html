@@ -2,14 +2,14 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Patvirtinti komandos trynimą
+    Confirm team deletion
 {% endblock %}
 
 {% block content %}
-    <h1>Ar tikrai norite ištrinti komandą "{{ team.pavadinimas }}"?</h1>
+    <h1>Do you really want to delete "{{ team.pavadinimas }}" team?</h1>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Taip, ištrinti</button>
-        <a href="{% url 'kraujo_tyrimai:komandaview' %}" class="btn btn-secondary">Atšaukti</a>
+        <button type="submit" class="btn btn-danger">Yes, delete it</button>
+        <a href="{% url 'kraujo_tyrimai:komandaview' %}" class="btn btn-secondary">Cancel</a>
     </form>
 {% endblock %}
