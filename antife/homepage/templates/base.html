@@ -43,10 +43,10 @@
         
         {% if request.user.is_authenticated %}
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'forumas:forumasview' %}">Forumas</a>
+          <a class="nav-link" href="{% url 'forumas:forumasview' %}">Forum</a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'kraujo_tyrimai:komandaview' %}">Komandos</a>
+          <a class="nav-link" href="{% url 'kraujo_tyrimai:komandaview' %}">Teams</a>
         </li>
         {% endif %}
         <!-- Mityba dropdown menu with Produktai and Receptai options -->
@@ -72,15 +72,15 @@
         </li>
         {% if request.user.is_authenticated %}
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'profilis:profilisview' %}">Profilis</a>
+          <a class="nav-link" href="{% url 'profilis:profilisview' %}">Profile</a>
         </li>
         {% endif %}
       </ul>
       {% if request.user.is_authenticated %}
-      <button type="button" class="btn btn-primary custom-button" onclick="Loguot()">Atsijungti</button>
+      <button type="button" class="btn btn-primary custom-button" onclick="Loguot()">Logout</button>
       {% else %}
-      <button type="button" class="btn btn-primary custom-button" onclick="openLogin()">Prisijungti</button>
-      <button type="button" class="btn btn-primary custom-button" onclick="openRegister()">Registruotis</button>
+      <button type="button" class="btn btn-primary custom-button" onclick="openLogin()">Login</button>
+      <button type="button" class="btn btn-primary custom-button" onclick="openRegister()">Register</button>
       {% endif %}
     </div>
   </nav>

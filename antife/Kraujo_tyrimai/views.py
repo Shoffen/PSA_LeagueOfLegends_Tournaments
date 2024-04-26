@@ -11,13 +11,13 @@ import datetime
 def create_komanda(request):
     # Check if the user already has a team
     if Komanda.objects.filter(fk_Naudotojasid_Naudotojas__user=request.user).exists():
-        messages.error(request, 'Jūs jau turite komandą arba esate dalis komandos.')
+        messages.error(request, 'You can only be a part of one team')
         return redirect('kraujo_tyrimai:komandaview')
 
     if request.method == 'POST':
         pavadinimas = request.POST.get('pavadinimas')
         if not pavadinimas:
-            messages.error(request, 'Pavadinimo laukas negali būti tuščias.')
+            messages.error(request, 'Team title must be filled')
             return redirect('kraujo_tyrimai:create_komanda')
 
         naudotojai_instance = Naudotojai.objects.get(user=request.user)
@@ -25,12 +25,12 @@ def create_komanda(request):
         existing_Team = Komanda.objects.filter(pavadinimas=pavadinimas).exists()
         if existing_Team:
             # If a team with the same name already exists, show an error message
-            messages.error(request, 'Komandos pavadinimas užimtas')
+            messages.error(request, 'Team title is already taken')
         else:
             # If the user doesn't have a team and a team with the same name doesn't exist, create a new team
             Komanda.objects.create(pavadinimas=pavadinimas, fk_Naudotojasid_Naudotojas=naudotojai_instance)
             # Add success message
-            messages.success(request, 'Komanda sėkmingai sukurta.')
+            messages.success(request, 'Team was succesfully created')
             # Redirect to the 'komandaview' view after creating the team
             return redirect('kraujo_tyrimai:komandaview')
 
@@ -39,7 +39,8 @@ def create_komanda(request):
 
 
 
-
+def create_team_form(request):
+    return render(request, 'create_team.html')
 
 
 @login_required
@@ -75,14 +76,40 @@ def delete_team(request, team_id):
 
     if request.method == 'POST':
         team.delete()
-        messages.success(request, 'Komanda sėkmingai ištrinta.')
+        messages.success(request, 'Team was succesfully deleted')
         return redirect('kraujo_tyrimai:komandaview')
 
     return render(request, 'confirm_delete_team.html', {'team': team})
 
+from django.shortcuts import get_object_or_404
 
-
-
+@login_required
+def edit_team(request, team_id):
+    # Retrieve the team object using the team_id
+    team = get_object_or_404(Komanda, pk=team_id)
+    
+    # Check if the user has permission to edit this team
+    if team.fk_Naudotojasid_Naudotojas.user != request.user:
+        messages.error(request, 'Jūs neturite teisės redaguoti šios komandos.')
+        return redirect('kraujo_tyrimai:komandaview')
+    
+    if request.method == 'POST':
+        # If the form is submitted, update the team data with the new values
+        new_pavadinimas = request.POST.get('pavadinimas')
+        if new_pavadinimas:
+            # Check if the new team name is already taken
+            if Komanda.objects.exclude(pk=team_id).filter(pavadinimas=new_pavadinimas).exists():
+                messages.error(request, 'Team titel is already taken')
+            else:
+                team.pavadinimas = new_pavadinimas
+                team.save()
+                messages.success(request, 'Team title was succesfully updated')
+                return redirect('kraujo_tyrimai:komandaview')
+        else:
+            messages.error(request, 'Team title must be filled')
+    
+    # If the request method is GET or if there was an error, render the edit_team.html template with the team data
+    return render(request, 'edit_team.html', {'team': team})
 
 
 
