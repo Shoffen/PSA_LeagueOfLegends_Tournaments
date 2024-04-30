@@ -1,5 +1,5 @@
 
-{% extends 'base.html' %}
+{% extends 'MainView.html' %}
 {% block title %}
     Team Details - {{ team.pavadinimas }}
 {% endblock %}
@@ -16,6 +16,6 @@
             {% endfor %}
         </ul>
         <!-- Add more details as needed -->
-        <a href="{% url 'kraujo_tyrimai:komandaview' %}" class="btn btn-secondary">Back</a>
+        <a href="{% url 'teams:teamsview' %}" class="btn btn-secondary">Back</a>
     </div>
 {% endblock %}

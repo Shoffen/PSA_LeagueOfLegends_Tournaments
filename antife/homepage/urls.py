@@ -9,6 +9,6 @@ urlpatterns = [
    path('mityba/', include('Mityba.urls', namespace='mityba')),
    path('forumas/', include('Forumas.urls', namespace='forumas')),
    path('profilis/', include('Profilis.urls', namespace='profilis')), 
-   path('kraujo_tyrimai/', include('Kraujo_tyrimai.urls', namespace='kraujo_tyrimai')), 
+   path('teams/', include('Teams.urls', namespace='teams')), 
     path('baseLogged/', loged, name='loged'),
 ]

@@ -1,5 +1,5 @@
 <!-- confirm_delete_team.html -->
-{% extends 'base.html' %}
+{% extends 'MainView.html' %}
 
 {% block title %}
     Confirm team deletion
@@ -9,7 +9,9 @@
     <h1>Do you really want to delete "{{ team.pavadinimas }}" team?</h1>
     <form method="post">
         {% csrf_token %}
+        <input type="hidden" name="confirmation" value="true">
         <button type="submit" class="btn btn-danger">Yes, delete it</button>
-        <a href="{% url 'kraujo_tyrimai:komandaview' %}" class="btn btn-secondary">Cancel</a>
+        
+        <a href="{% url 'teams:teamsview' %}" class="btn btn-secondary">Cancel</a>
     </form>
 {% endblock %}
