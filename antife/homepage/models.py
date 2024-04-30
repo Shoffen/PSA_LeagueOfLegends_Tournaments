@@ -29,7 +29,7 @@ class Naudotojai(models.Model):
     level = models.IntegerField()
     last_login = models.DateTimeField(null=True, blank=True)
 
-class Komanda(models.Model):
+class Team(models.Model):
     pavadinimas = models.CharField(max_length=255)
     fk_Naudotojasid_Naudotojas = models.ForeignKey(Naudotojai, on_delete=models.CASCADE)
 
