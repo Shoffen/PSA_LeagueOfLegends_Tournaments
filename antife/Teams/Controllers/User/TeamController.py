@@ -15,7 +15,7 @@ def openCreateForm(request):
         pavadinimas = request.POST.get('pavadinimas')
         if not pavadinimas:
             messages.error(request, 'Team title must be filled')
-            return redirect('teams:create_komanda')
+            return redirect('teams:teamsview')
 
         naudotojai_instance = Naudotojai.objects.get(user=request.user)
 
@@ -67,7 +67,7 @@ def view_team(request, team_id):
     team = get_object_or_404(Team, id=team_id)
 
     # Pass the team object to the template
-    return render(request, 'TeamInformationForm.html', {'team': team})
+    return render(request, 'SingleTeamView.html', {'team': team})
 
 @login_required
 def deleteTeam(request, team_id):

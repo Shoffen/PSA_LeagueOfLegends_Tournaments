@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'Forumas',
     'Teams',
     'Profilis',
+    
 
 ]
 
@@ -67,8 +68,11 @@ ROOT_URLCONF = 'antife.urls'
 
 TEMPLATES = [
     {
+        'DIRS': [
+            os.path.join(BASE_DIR, 'tournaments', 'templates', 'tournaments'),
+            os.path.join(BASE_DIR, 'Teams', 'Views'),
+        ],
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'Teams', 'Views')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
