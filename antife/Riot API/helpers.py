@@ -10,7 +10,6 @@ def get_account_by_riot_id(summoner_name, tag_line):
     :return: Account information as a dictionary or None if there's an issue
     """
 
-
     params = {
         'api_key': settings.API_KEY
     }

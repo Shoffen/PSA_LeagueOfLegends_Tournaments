@@ -4,4 +4,4 @@ summoner_name = "HKavav"
 tag_line = "EUNE"
 
 summoner = get_account_by_riot_id(summoner_name, tag_line)
-print(summoner['puuid'])
+print(summoner)
