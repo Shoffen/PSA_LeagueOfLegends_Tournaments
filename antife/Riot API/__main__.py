@@ -16,12 +16,10 @@ print(summoner)
 
 # gets match ids, count default value 5
 match_ids = get_match_ids(summoner_name, tag_line, 2)
-print(match_ids[0])
 
-
-def get_player_statistics_in_match():
+def get_player_statistics_in_match(match_id, summoner_puuid):
     # Gets our player's statistics in a match
-    match = get_match(match_ids[0])
+    match = get_match(match_id)
     if summoner_puuid in match['metadata']['participants']:  # Checking if our player was in this match
         player_index = match['metadata']['participants'].index(summoner_puuid)  # Finding index of our player
     else:
@@ -60,7 +58,7 @@ def get_player_statistics_in_match():
     }
 
 
-print(get_player_statistics_in_match())
+print(get_player_statistics_in_match(match_ids[0], summoner_puuid))
 
 
 
