@@ -1,0 +1,30 @@
+<!-- edit_team.html -->
+{% extends 'MainView.html' %}
+{% load static %}
+
+{% block title %}
+    Edit team
+{% endblock %}
+
+{% block content %}
+    <h1>Edit team "{{ team.pavadinimas }}"</h1>
+    
+    <!-- Display error messages if any -->
+    {% if messages %}
+        <div class="error-container">
+            {% for message in messages %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_pavadinimas">New Team title:</label>
+        <input type="text" name="pavadinimas" id="id_pavadinimas" value="{{ team.pavadinimas }}" placeholder="Naujas pavadinimas">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'teams:teamsview' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}

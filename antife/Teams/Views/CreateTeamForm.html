@@ -1,0 +1,25 @@
+<!-- CreateTeamForm.html -->
+{% extends 'MainView.html' %}
+{% load static %}
+
+{% block title %}
+    Create a New Team
+{% endblock %}
+
+{% block content %}
+    <style>
+        .form-container {
+            margin-top: 20px;
+        }
+    </style>
+
+    <div class="form-container">
+        <h1>Create a New Team</h1>
+        <form method="post" action="{% url 'teams:create_team' %}">
+            {% csrf_token %}
+            <label for="id_pavadinimas">Team Title:</label>
+            <input type="text" name="pavadinimas" id="id_pavadinimas" placeholder="Enter Team Title">
+            <input type="submit" value="Create">
+        </form>
+    </div>
+{% endblock %}
