@@ -49,6 +49,27 @@ def create_team_form(request):
 
 def GetAllTeams():
     return Team.objects.all()
+@login_required
+def leave_team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    user = request.user.naudotojai
+    if user in team.members.all():
+        team.members.remove(user)
+        messages.success(request, 'You have successfully left the team.')
+    else:
+        messages.warning(request, 'You are not a member of this team.')
+    return redirect('teams:view_team', team_id=team_id)
+
+@login_required
+def join_team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    user = request.user.naudotojai
+    if user in team.members.all():
+        messages.warning(request, 'You are already a member of this team.')
+    else:
+        team.members.add(user)
+        messages.success(request, 'You have successfully joined the team.')
+    return redirect('teams:view_team', team_id=team_id)
 
 @login_required
 def openteams(request):

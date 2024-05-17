@@ -1,13 +1,51 @@
-
 {% extends 'MainView.html' %}
+{% load static %} 
+
 {% block title %}
     Team Details - {{ team.pavadinimas }}
 {% endblock %}
+
 {% block content %}
+    <style>
+        .team-details-container {
+            margin-top: 20px;
+        }
+        /* New styles for the messages */
+        .error-container {
+            margin-bottom: 20px;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
+
+    <!-- Display Messages -->
+    {% if messages %}
+        <div class="error-container">
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="team-details-container">
         <h1>Team Details</h1>
         <p><strong>Team Title:</strong> {{ team.pavadinimas }}</p>
-        <!-- Add more details here -->
         <p><strong>Team Leader:</strong> {{ team.fk_Naudotojasid_Naudotojas.user.username }}</p>
         <p><strong>Members:</strong></p>
         <ul>
@@ -15,7 +53,21 @@
                 <li>{{ member.user.username }}</li>
             {% endfor %}
         </ul>
-        <!-- Add more details as needed -->
-        <a href="{% url 'teams:teamsview' %}" class="btn btn-secondary">Back</a>
+
+        {% if request.user.naudotojai in team.members.all %}
+            <!-- Leave Team Button -->
+            <form action="{% url 'teams:leave_team' team.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Leave Team</button>
+            </form>
+        {% else %}
+            <!-- Join Team Button -->
+            <form action="{% url 'teams:join_team' team.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Join Team</button>
+            </form>
+        {% endif %}
+
+        <a href="{% url 'teams:view_team' team_id=team.id %}" class="btn btn-secondary">Back</a>
     </div>
 {% endblock %}
