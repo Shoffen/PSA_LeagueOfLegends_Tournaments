@@ -32,6 +32,8 @@ class Naudotojai(models.Model):
 class Team(models.Model):
     pavadinimas = models.CharField(max_length=255)
     fk_Naudotojasid_Naudotojas = models.ForeignKey(Naudotojai, on_delete=models.CASCADE)
+    members = models.ManyToManyField(Naudotojai, related_name='teams_joined')
+
 
 class Receptai(models.Model):
     kalorijos = models.FloatField(default=0.0)

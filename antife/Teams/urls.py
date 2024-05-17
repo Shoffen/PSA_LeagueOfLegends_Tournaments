@@ -11,4 +11,6 @@ urlpatterns = [
     path('delete_team/<int:team_id>/', TeamController.deleteTeam, name='delete_team'),
     path('edit_team/<int:team_id>/', TeamController.openEditForm, name='edit_team'),
     path('create-team/', TeamController.create_team_form, name='create_team_form'),
+    path('join/<int:team_id>/', TeamController.join_team, name='join_team'),
+    path('team/<int:team_id>/leave/', TeamController.leave_team, name='leave_team'),
 ]
