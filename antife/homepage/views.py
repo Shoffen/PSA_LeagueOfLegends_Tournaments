@@ -7,6 +7,9 @@ from django.http import JsonResponse
 from django.contrib.sessions.models import Session
 import re
 import sys
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 def home(request):
     return render(request, "home.html")
@@ -90,11 +93,47 @@ def register(request):
                 gimimo_data=birthdate_obj,
                 level=0  # Set default level or adjust as needed
             )  
-            new_user_profile.save() 
+            new_user_profile.save()
+
+            # Email credentials
+            emailSender = 'vartvald2023@outlook.com'
+            passwordd = 'xwe449#123!@'
+
+            # SMTP server configuration
+            smtp_server = 'smtp-mail.outlook.com'
+            smtp_port = 587
+
+            # Create message container
+            msg = MIMEMultipart()
+            msg['From'] = emailSender
+            msg['To'] = email  # Replace with the recipient's email
+            msg['Subject'] = 'Nauja paskyra užregistruota.'
+
+            # Message body
+            body = """"\
+                <p>Sveiki,</p>
+                <p>Nauja paskyra buvo sėkmingai užregistruota.</p>"""
+
+            msg.attach(MIMEText(body, 'html'))
+
+            # Connect to SMTP server and send email
+            try:
+                server = smtplib.SMTP(smtp_server, smtp_port)
+                server.starttls()
+                server.login(emailSender, passwordd)
+                server.send_message(msg)
+                server.quit()
+                print('Message sent successfully')
+            except Exception as e:
+                print('Message sending failed:', e)
 
             messages.success(request, f'Registracija sėkminga. Gali bandyt prisijungt!')
             return redirect('/login')  # Change 'home' to the name of your homepage URL pattern
-    
+
+
+
+
+
     return render(request, 'register.html')
 
 
