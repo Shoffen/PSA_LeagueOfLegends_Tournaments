@@ -23,6 +23,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('vardas', models.CharField(max_length=255)),
+                ('lolname', models.CharField(max_length=255)),
+                ('puuid', models.CharField(max_length=255)),
+                ('accountid', models.CharField(max_length=255)),
+                ('tier', models.CharField(max_length=255)),
+                ('rank', models.CharField(max_length=255)),
                 ('pavarde', models.CharField(max_length=255)),
                 ('telefonas', models.CharField(max_length=255)),
                 ('el_pastas', models.CharField(max_length=255)),

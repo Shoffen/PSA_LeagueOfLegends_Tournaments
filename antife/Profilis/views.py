@@ -8,10 +8,14 @@ from django.urls import reverse
 from datetime import datetime
 from django.shortcuts import render
 
+from antife.RiotAPI.helpers import get_player_statistics_in_match, get_summoner_info, get_match_ids
+
+
 def profilisview(request):
     user_id = None
     username = None
     vardas = None
+    matches = []
     pavarde = None
     telefonas = None
     gimimo_Data = None
@@ -31,12 +35,39 @@ def profilisview(request):
             pavarde = naudotojas.pavarde
             telefonas = naudotojas.telefonas
             gimimo_Data = naudotojas.gimimo_data
+            tier = naudotojas.tier
+            rank = naudotojas.rank
+
+            summoner = get_summoner_info(naudotojas.lolname, "EUNE")
+
+            # gets match ids, count default value 5
+            match_ids = get_match_ids(naudotojas.lolname, "EUNE", 5)  # Get 5 match IDs
+
+            for match_id in match_ids:
+                player_statistics = get_player_statistics_in_match(match_id, naudotojas.puuid)
+                matches.append(player_statistics)
+
+            first_entry = summoner[0]
+            LP = first_entry.get('leaguePoints', '0')
+            wins = first_entry.get('wins', '0')
+            loses = first_entry.get('loses', '0')
+
         except Naudotojai.DoesNotExist:
             # Handle the case where there's no related Naudotojai instance for the current user
             pass
     formatted_gimimo_Data = formats.date_format(gimimo_Data, "Y-m-d") if gimimo_Data else ""
     context = {
         'user_id': user_id,
+        'match1': matches[0],
+        'match2': matches[1],
+        'match3': matches[2],
+        'match4': matches[3],
+        'match5': matches[4],
+        'LP': LP,
+        'wins': wins,
+        'losses': loses,
+        'tier': tier,
+        'rank': rank,
         'username': username,
         'password': password,
         'vardas': vardas,

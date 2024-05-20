@@ -39,6 +39,22 @@ class Migration(migrations.Migration):
             name='first_name',
             field=models.CharField(blank=True, max_length=150, verbose_name='first name'),
         ),
+        migrations.AlterModelOptions(
+            name='naudotojai',
+            options={'verbose_name': 'lolname', 'verbose_name_plural': 'lolnames'},
+        ),
+        migrations.AlterModelOptions(
+            name='naudotojai',
+            options={'verbose_name': 'puuid', 'verbose_name_plural': 'puuids'},
+        ),
+        migrations.AlterModelOptions(
+            name='naudotojai',
+            options={'verbose_name': 'tier', 'verbose_name_plural': 'tiers'},
+        ),
+        migrations.AlterModelOptions(
+            name='naudotojai',
+            options={'verbose_name': 'rank', 'verbose_name_plural': 'ranks'},
+        ),
         migrations.AddField(
             model_name='naudotojai',
             name='groups',

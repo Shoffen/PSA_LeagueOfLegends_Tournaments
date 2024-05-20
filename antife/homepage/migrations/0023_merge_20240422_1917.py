@@ -7,7 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('homepage', '0013_remove_komentarai_likes_komentarai_likes'),
-        ('homepage', '0022_rename_pavadinimas_product_name'),
+        ('homepage', '0017_merge_20240418_1842'),
     ]
 
     operations = [
