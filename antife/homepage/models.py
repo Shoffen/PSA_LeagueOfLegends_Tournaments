@@ -38,11 +38,7 @@ class Team(models.Model):
     fk_Naudotojasid_Naudotojas = models.ForeignKey(Naudotojai, on_delete=models.CASCADE)
     members = models.ManyToManyField(Naudotojai, related_name='teams_joined')
 
-class Tournament(models.Model):
-    title = models.CharField(max_length=255)
-    fk_Naudotojasid_Naudotojas = models.ForeignKey(Naudotojai, on_delete=models.CASCADE)
-    rankRequirement = models.CharField(max_length=255)
-    registered_users = models.ManyToManyField(Naudotojai, related_name='registered_tournaments')
+
     
 class Receptai(models.Model):
     kalorijos = models.FloatField(default=0.0)
@@ -50,6 +46,14 @@ class Receptai(models.Model):
     fenilalaninas = models.FloatField(default=0.0)
     baltymai = models.FloatField(default=0.0)
     aprasas = models.CharField(max_length=255)
+
+class Tournament(models.Model):
+    title = models.CharField(max_length=255)
+    fk_Naudotojasid_Naudotojas = models.ForeignKey(Naudotojai, on_delete=models.CASCADE, null=True)
+    rankRequirement = models.CharField(max_length=255, null=True)
+    registered_users = models.ManyToManyField(Naudotojai, related_name='registered_tournaments')
+
+
 
 class Forumai(models.Model):
     pavadinimas = models.CharField(max_length=255)

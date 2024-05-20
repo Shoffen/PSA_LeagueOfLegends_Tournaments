@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'Forumas',
     'Teams',
     'Profilis',
-    'RiotAPI'
+    'RiotAPI',
+    'Tournaments',
     
 
 ]
