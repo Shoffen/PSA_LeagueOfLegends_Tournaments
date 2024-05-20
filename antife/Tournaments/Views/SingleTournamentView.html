@@ -1,0 +1,56 @@
+{% extends 'MainView.html' %}
+{% load static %}
+
+{% block title %}
+    View Tournament
+{% endblock %}
+
+{% block content %}
+    <style>
+        .tournament-details {
+            margin-top: 20px;
+        }
+        .tournament-details th, .tournament-details td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tournament-details th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+    <div class="tournament-details">
+        <h1>{{ tournament.title }}</h1>
+        <table>
+            <tr>
+                <th>Title</th>
+                <td>{{ tournament.title }}</td>
+            </tr>
+            <tr>
+                <th>Rank Requirement</th>
+                <td>{{ tournament.rankRequirement }}</td>
+            </tr>
+            <tr>
+                <th>Organizer</th>
+                <td>{{ tournament.fk_Naudotojasid_Naudotojas.user.username }}</td>
+            </tr>
+        </table>
+
+        {% if request.user.is_authenticated and request.user.is_staff %}
+            <a href="{% url 'tournaments:edit_tournament' tournament.id %}" class="btn btn-primary">Edit</a>
+        {% endif %}
+
+        {% if request.user.is_authenticated and not request.user in tournament.registered_users.all %}
+            <a href="#" class="btn btn-success" id="register-btn">Register</a>
+        {% endif %}
+
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("register-btn").addEventListener("click", function() {
+                window.location.href = "{% url 'tournaments:register_choose_form' tournament.id %}";
+            });
+        });
+    </script>
+    
+{% endblock %}

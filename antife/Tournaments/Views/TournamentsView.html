@@ -2,9 +2,110 @@
 {% load static %} 
 
 {% block title %}
-    List of Teams
+    List of Tournaments
 {% endblock %}
 
 {% block content %}
+    <style>
+        .form-container {
+            margin-top: 20px;
+        }
+        .chart-img {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/errors.css' %}">
+    <h1>List of all Tournaments</h1>
+    {% if messages %}
+        <div class="error-container">
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if user_tournament %}
+        <div class="form-container">
+            <h2>My Tournament</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tournament Title</th>
+                        <th>Rank Requirement</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ user_tournament.title }}</td>
+                        <td>{{ user_tournament.rankRequirement }}</td>
+                        <td>
+                            {% if user_tournament.id %}
+                                <a href="{% url 'tournaments:edit_tournament' user_tournament.id %}" class="btn btn-primary">Edit</a>
+                                <a href="{% url 'tournaments:view_tournament' user_tournament.id %}" class="btn btn-primary">View</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    
+    {% if request.user.is_authenticated and request.user.is_staff %}
+        <div class="form-container">
+            <h2>Create a Tournament</h2>
+            <button id="showCreateFormBtn" class="btn btn-primary" onclick="toggleCreateForm()">Create a Tournament</button>
+        </div>
+        <div id="createFormContainer" class="form-container hidden"></div>
+    {% endif %}
+    
+    <div id="createFormContainer" class="form-container hidden"></div>
+    
+    <h2>All Tournaments</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Tournament Title</th>
+                <th>Rank Requirement</th>
+                <th>Possible Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tournament in all_tournaments %}
+                <tr>
+                    <td>{{ tournament.title }}</td>
+                    <td>{{ tournament.rankRequirement }}</td>
+                    <td>
+                        <a href="{% url 'tournaments:view_tournament' tournament.id %}" class="btn btn-primary">View</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function toggleCreateForm() {
+            window.location.href = "{% url 'tournaments:create_tournament' %}";
+        }
+    </script>
     
 {% endblock %}

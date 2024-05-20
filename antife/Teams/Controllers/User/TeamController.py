@@ -1,13 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from homepage.models import Naudotojai, Team
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.shortcuts import get_object_or_404
 
 @login_required
 def openCreateForm(request):
     # Check if the user already has a team
-    if Team.objects.filter(fk_Naudotojasid_Naudotojas__user=request.user).exists():
+    if Team.objects.filter(members=request.user.naudotojai).exists():
         messages.error(request, 'You can only be a part of one team')
         return redirect('teams:komandaview')
 
@@ -19,36 +18,38 @@ def openCreateForm(request):
 
         naudotojai_instance = Naudotojai.objects.get(user=request.user)
 
-        # Get all teams
-        all_teams = GetAllTeams()
-
         # Check if the team name already exists
-        existing_team_names = [team.pavadinimas for team in all_teams]
-        if pavadinimas in existing_team_names:
-            # If a team with the same name already exists, show an error message
+        if Team.objects.filter(pavadinimas=pavadinimas).exists():
             messages.error(request, 'Team title is already taken')
         else:
-            # If the user doesn't have a team and a team with the same name doesn't exist, create a new team
-            Team.objects.create(pavadinimas=pavadinimas, fk_Naudotojasid_Naudotojas=naudotojai_instance)
-            # Add success message
+            team = Team.objects.create(pavadinimas=pavadinimas, fk_Naudotojasid_Naudotojas=naudotojai_instance)
+            team.members.add(naudotojai_instance)
             messages.success(request, 'Team was successfully created')
-            # Redirect to the 'teamsview' view after creating the team
             return redirect('teams:teamsview')
 
-    # If the request method is not POST or if there was an error, render the 'teamsview' template
     return openteams(request)
-
-
 
 @login_required
 def create_team_form(request):
     return render(request, 'CreateTeamForm.html')
 
+@login_required
+def join_team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    user = request.user.naudotojai
+    
+    # Check if the user is in any team
+    user_teams = Team.objects.filter(members=user)
+    if user_teams.exists() and not user_teams.filter(pk=team_id).exists():
+        messages.error(request, 'You belong to another team and cannot join a new one.')
+    elif user in team.members.all():
+        messages.warning(request, 'You are already a member of this team.')
+    else:
+        team.members.add(user)
+        messages.success(request, 'You have successfully joined the team.')
+    
+    return redirect('teams:view_team', team_id=team_id)
 
-
-
-def GetAllTeams():
-    return Team.objects.all()
 @login_required
 def leave_team(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
@@ -61,33 +62,14 @@ def leave_team(request, team_id):
     return redirect('teams:view_team', team_id=team_id)
 
 @login_required
-def join_team(request, team_id):
-    team = get_object_or_404(Team, pk=team_id)
-    user = request.user.naudotojai
-    if user in team.members.all():
-        messages.warning(request, 'You are already a member of this team.')
-    else:
-        team.members.add(user)
-        messages.success(request, 'You have successfully joined the team.')
-    return redirect('teams:view_team', team_id=team_id)
-
-@login_required
 def openteams(request):
-    # Get all teams from the database using the separate function
     all_teams = GetAllTeams()
-
-    # Get the team of the currently logged-in user
-    user_team = Team.objects.filter(fk_Naudotojasid_Naudotojas__user=request.user).first()
-
+    user_team = Team.objects.filter(members=request.user.naudotojai).first()
     return render(request, 'TeamsView.html', {'all_teams': all_teams, 'user_team': user_team})
-
 
 @login_required
 def view_team(request, team_id):
-    # Retrieve the team object using the team_id
     team = get_object_or_404(Team, id=team_id)
-
-    # Pass the team object to the template
     return render(request, 'SingleTeamView.html', {'team': team})
 
 @login_required
@@ -96,12 +78,11 @@ def deleteTeam(request, team_id):
         team = Team.objects.get(pk=team_id)
         if team.fk_Naudotojasid_Naudotojas.user != request.user:
             messages.error(request, 'Jūs neturite teisės trinti šios komandos.')
-            return redirect('teams:komandaview')
+            return redirect('teams:teamsview')
     except Team.DoesNotExist:
         messages.error(request, 'Komanda nerasta.')
-        return redirect('teams:komandaview')
+        return redirect('teams:teamsview')
 
-    # Call the checkConfirmation function to handle the confirmation check
     if checkConfirmation(request):
         team.delete()
         messages.success(request, 'Komanda buvo sėkmingai ištrinta.')
@@ -115,36 +96,28 @@ def checkConfirmation(request):
         return True
     return False
 
-
-
-
 @login_required
 def openEditForm(request, team_id):
-    # Retrieve the team object using the team_id
     team = get_object_or_404(Team, pk=team_id)
     
-    # Check if the user has permission to edit this team
     if team.fk_Naudotojasid_Naudotojas.user != request.user:
         messages.error(request, 'Jūs neturite teisės redaguoti šios komandos.')
-        return redirect('teams:komandaview')
+        return redirect('teams:view_team')
     
     if request.method == 'POST':
-        # If the form is submitted, update the team data with the new values
         new_pavadinimas = request.POST.get('pavadinimas')
         if new_pavadinimas:
-            # Check if the new team name is already taken
             if Team.objects.exclude(pk=team_id).filter(pavadinimas=new_pavadinimas).exists():
-                messages.error(request, 'Team titel is already taken')
+                messages.error(request, 'Team title is already taken')
             else:
                 team.pavadinimas = new_pavadinimas
                 team.save()
-                messages.success(request, 'Team title was succesfully updated')
+                messages.success(request, 'Team title was successfully updated')
                 return redirect('teams:teamsview')
         else:
             messages.error(request, 'Team title must be filled')
     
-    # If the request method is GET or if there was an error, render the edit_team.html template with the team data
     return render(request, 'EditTeamForm.html', {'team': team})
 
-
-
+def GetAllTeams():
+    return Team.objects.all()
