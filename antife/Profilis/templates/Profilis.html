@@ -79,6 +79,34 @@
                 <p>Elektroninis paštas nepasiekiamas</p>
             {% endif %}
         </div>
+        <div class="profile-info-item">
+            {% if match1 %}
+                <p>Pirmas match: {{ match1 }}</p>
+            {% else %}
+                <p>Nėra naujų matchų</p>
+            {% endif %}
+        </div>
+        <div class="profile-info-item">
+            {% if match2 %}
+                <p>Pirmas match: {{ match2 }}</p>
+            {% else %}
+                <p>Nėra naujų matchų</p>
+            {% endif %}
+        </div>
+        <div class="profile-info-item">
+            {% if match3 %}
+                <p>Pirmas match: {{ match3 }}</p>
+            {% else %}
+                <p>Nėra naujų matchų</p>
+            {% endif %}
+        </div>
+        <div class="profile-info-item">
+            {% if match4 %}
+                <p>Pirmas match: {{ match4 }}</p>
+            {% else %}
+                <p>Nėra naujų matchų</p>
+            {% endif %}
+        </div>
     </div>
 
     <!-- Editing form (initially hidden) -->

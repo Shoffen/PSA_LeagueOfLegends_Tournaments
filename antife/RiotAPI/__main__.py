@@ -10,15 +10,15 @@ summoner_puuid = get_account_by_riot_id(summoner_name, tag_line)['puuid']
 # make sure the regional things match the correct region in settings.py
 
 
-# gets basic summoner information such as results of last 5 matches and rank
 summoner = get_summoner_info(summoner_name, tag_line)
 print(summoner)
 
 # gets match ids, count default value 5
-match_ids = get_match_ids(summoner_name, tag_line, 2)
+match_ids = get_match_ids(summoner_name, tag_line, 5)  # Get 5 match IDs
 
-player_statistics = get_player_statistics_in_match(match_ids[0], summoner_puuid)
-print(player_statistics)
+for match_id in match_ids:
+    player_statistics = get_player_statistics_in_match(match_id, summoner_puuid)
+    print(player_statistics)
 
 
 
