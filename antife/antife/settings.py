@@ -12,8 +12,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 CKEDITOR_UPLOAD_PATH = "content/ckeditor/"
 
 MEDIA_URL = '/media/'
@@ -50,6 +53,7 @@ INSTALLED_APPS = [
     'Forumas',
     'Teams',
     'Profilis',
+    'RiotAPI'
     
 
 ]

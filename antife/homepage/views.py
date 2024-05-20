@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.sessions.models import Session
 import re
+import sys
 
 def home(request):
     return render(request, "home.html")
@@ -15,6 +16,10 @@ def loged(request):
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+
+from antife.RiotAPI.helpers import get_account_by_riot_id
+import antife.RiotAPI.settings
+
 
 
 from django.contrib.auth.models import User
@@ -31,6 +36,7 @@ def register(request):
         email = request.POST.get('email')
         username = request.POST.get('username')
         name = request.POST.get('name')
+        lolname = request.POST.get('lolname')
         lastName = request.POST.get('lastName')
         phoneNumber = request.POST.get('phoneNumber')
         birthday = request.POST.get('birthday')
@@ -38,6 +44,8 @@ def register(request):
         if User.objects.filter(username=username):
             messages.error(request, 'Šis slapyvardis jau užimtas!')
             return render (request, 'register.html')
+
+
         # Validate email format using regular expression
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email) or not email.endswith('@gmail.com'):
             messages.error(request, 'Neteisingai įvestas elektronins paštas. Įveskite teisingą.')
@@ -66,10 +74,16 @@ def register(request):
 
             # Hash the password
             hashed_password = make_password(password)
+
+            # get puuid
+            puuid = get_account_by_riot_id(lolname, "EUNE")['puuid']
+            print(puuid)
             
             # Save the user profile data to the database
             new_user_profile = Naudotojai(
                 user=user,  # Associate the profile with the newly created user
+                lolname=lolname,
+                puuid=puuid,
                 vardas=name,
                 telefonas=phoneNumber,
                 pavarde=lastName,
