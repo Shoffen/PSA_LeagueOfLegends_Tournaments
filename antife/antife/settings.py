@@ -73,6 +73,7 @@ ROOT_URLCONF = 'antife.urls'
 TEMPLATES = [
     {
         'DIRS': [
+            os.path.join(BASE_DIR, 'Profilis', 'templates'),
             os.path.join(BASE_DIR, 'tournaments', 'templates', 'tournaments'),
             os.path.join(BASE_DIR, 'Teams', 'Views'),
         ],

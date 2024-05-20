@@ -47,7 +47,7 @@ def get_summoner_ids(puuid, region_code=settings.DEFAULT_REGION_CODE):
         return None
 
 
-def get_summoner_info(summoner_name, tag_line, region=settings.DEFAULT_REGION, region_code=settings.DEFAULT_REGION_CODE, ):
+def get_summoner_info(summoner_name, tag_line, region=settings.DEFAULT_REGION, region_code=settings.DEFAULT_REGION_CODE):
     """
     Wrapper for LEAGUE-V4 API portal
     Gets information about a summoner by their name and tagline
@@ -141,6 +141,14 @@ def get_player_statistics_in_match(match_id, summoner_puuid):
     wards_placed = player_match_statistics['wardsPlaced']
     win = player_match_statistics['win']
 
+    # Extract match duration and start time
+    match_duration_seconds = match['info']['gameDuration']  # Duration of the match in seconds
+    match_start_time = match['info']['gameStartTimestamp']  # Start time of the match (Unix timestamp)
+
+    # Convert match duration from seconds to minutes and seconds
+    match_duration_minutes = match_duration_seconds // 60
+    match_duration_seconds_remainder = match_duration_seconds % 60
+
     return {
         'championName': champion_name,
         'champLevel': champ_level,
@@ -153,5 +161,8 @@ def get_player_statistics_in_match(match_id, summoner_puuid):
         'totalMinionsKilled': total_minions_killed,
         'wardsKilled': wards_killed,
         'wardsPlaced': wards_placed,
-        'win': win
+        'win': win,
+        'matchDurationMinutes': match_duration_minutes,
+        'matchDurationSeconds': match_duration_seconds_remainder,
+        'matchStartTime': match_start_time
     }

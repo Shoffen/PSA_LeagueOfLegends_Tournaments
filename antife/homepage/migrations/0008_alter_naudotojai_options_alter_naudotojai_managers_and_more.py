@@ -47,6 +47,14 @@ class Migration(migrations.Migration):
             name='naudotojai',
             options={'verbose_name': 'puuid', 'verbose_name_plural': 'puuids'},
         ),
+        migrations.AlterModelOptions(
+            name='naudotojai',
+            options={'verbose_name': 'tier', 'verbose_name_plural': 'tiers'},
+        ),
+        migrations.AlterModelOptions(
+            name='naudotojai',
+            options={'verbose_name': 'rank', 'verbose_name_plural': 'ranks'},
+        ),
         migrations.AddField(
             model_name='naudotojai',
             name='groups',

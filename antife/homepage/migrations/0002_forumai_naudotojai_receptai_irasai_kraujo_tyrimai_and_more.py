@@ -26,6 +26,8 @@ class Migration(migrations.Migration):
                 ('lolname', models.CharField(max_length=255)),
                 ('puuid', models.CharField(max_length=255)),
                 ('accountid', models.CharField(max_length=255)),
+                ('tier', models.CharField(max_length=255)),
+                ('rank', models.CharField(max_length=255)),
                 ('pavarde', models.CharField(max_length=255)),
                 ('telefonas', models.CharField(max_length=255)),
                 ('el_pastas', models.CharField(max_length=255)),

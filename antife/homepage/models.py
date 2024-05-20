@@ -23,6 +23,8 @@ class Naudotojai(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
     vardas = models.CharField(max_length=255)
     lolname = models.CharField(max_length=255, null=True)
+    tier = models.CharField(max_length=255, null=True)
+    rank = models.CharField(max_length=255, null=True)
     puuid = models.CharField(max_length=255, null=True)
     pavarde = models.CharField(max_length=255)
     telefonas = models.CharField(max_length=255)

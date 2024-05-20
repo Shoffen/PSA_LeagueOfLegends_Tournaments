@@ -20,7 +20,7 @@ def loged(request):
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 
-from antife.RiotAPI.helpers import get_account_by_riot_id
+from antife.RiotAPI.helpers import get_account_by_riot_id, get_summoner_info, get_summoner_ids
 import antife.RiotAPI.settings
 
 
@@ -44,6 +44,9 @@ def register(request):
         phoneNumber = request.POST.get('phoneNumber')
         birthday = request.POST.get('birthday')
         password = request.POST.get('password')
+
+        summoner = get_summoner_info(lolname, "EUNE")
+
         if User.objects.filter(username=username):
             messages.error(request, 'Šis slapyvardis jau užimtas!')
             return render (request, 'register.html')
@@ -80,13 +83,21 @@ def register(request):
 
             # get puuid
             puuid = get_account_by_riot_id(lolname, "EUNE")['puuid']
-            print(puuid)
+
+
+
+
+            first_entry = summoner[0]
+            tier = first_entry.get('tier', 'unranked')
+            rank = first_entry.get('rank', 'unranked')
             
             # Save the user profile data to the database
             new_user_profile = Naudotojai(
                 user=user,  # Associate the profile with the newly created user
                 lolname=lolname,
                 puuid=puuid,
+                tier=tier,
+                rank=rank,
                 vardas=name,
                 telefonas=phoneNumber,
                 pavarde=lastName,

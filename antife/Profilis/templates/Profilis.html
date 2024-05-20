@@ -79,35 +79,283 @@
                 <p>Elektroninis paštas nepasiekiamas</p>
             {% endif %}
         </div>
-        <div class="profile-info-item">
-            {% if match1 %}
-                <p>Pirmas match: {{ match1 }}</p>
-            {% else %}
-                <p>Nėra naujų matchų</p>
-            {% endif %}
+
+        <div class="separator">
+            <div class="separator-line"></div>
+            <div class="separator-label">Paskutiniai 5 matchai</div>
         </div>
-        <div class="profile-info-item">
-            {% if match2 %}
-                <p>Pirmas match: {{ match2 }}</p>
-            {% else %}
-                <p>Nėra naujų matchų</p>
-            {% endif %}
+
+
+        <div class="match-box" style="background-color: {% if match1.win %}lightblue{% else %}lightcoral{% endif %}">
+            <div class="match-header">
+                <div class="champion-info">
+                    <img src="{% static 'images/championTiles/' %}{{ match1.championName }}_0.jpg">
+                    <div>
+                        <div class="champion-name">{{ match1.championName }}</div>
+                        <div class="champion-level">Level {{ match1.champLevel }}</div>
+                        <div class="match-duration">Duration: {{ match1.matchDurationMinutes }}m {{ match1.matchDurationSeconds }}s</div>
+                    </div>
+                </div>
+                <div class="outcome">
+                    {% if match1.win %}
+                        Won
+                    {% else %}
+                        Lost
+                    {% endif %}
+                </div>
+            </div>
+            <div class="match-details">
+                <div class="stats">
+                    <div class="stat">KDA: {{ match1.kills }}/{{ match1.deaths }}/{{ match1.assists }}</div>
+                    <div class="stat">Lane: {{ match1.lane }}</div>
+                    <div class="stat">Damage Dealt: {{ match1.totalDamageDealt }}</div>
+                    <div class="stat">Damage Taken: {{ match1.totalDamageTaken }}</div>
+                    <div class="stat">Minions Killed: {{ match1.totalMinionsKilled }}</div>
+                    <div class="stat">Wards Killed: {{ match1.wardsKilled }}</div>
+                    <div class="stat">Wards Placed: {{ match1.wardsPlaced }}</div>
+                </div>
+            </div>
         </div>
-        <div class="profile-info-item">
-            {% if match3 %}
-                <p>Pirmas match: {{ match3 }}</p>
-            {% else %}
-                <p>Nėra naujų matchų</p>
-            {% endif %}
+
+
+
+        <div class="match-box" style="background-color: {% if match2.win %}lightblue{% else %}lightcoral{% endif %}">
+            <div class="match-header">
+                <div class="champion-info">
+                    <img src="{% static 'images/championTiles/' %}{{ match2.championName }}_0.jpg">
+                    <div>
+                        <div class="champion-name">{{ match2.championName }}</div>
+                        <div class="champion-level">Level {{ match2.champLevel }}</div>
+                        <div class="match-duration">Duration: {{ match2.matchDurationMinutes }}m {{ match2.matchDurationSeconds }}s</div>
+                    </div>
+                </div>
+                <div class="outcome">
+                    {% if match2.win %}
+                        Won
+                    {% else %}
+                        Lost
+                    {% endif %}
+                </div>
+            </div>
+            <div class="match-details">
+                <div class="stats">
+                    <div class="stat">KDA: {{ match2.kills }}/{{ match2.deaths }}/{{ match2.assists }}</div>
+                    <div class="stat">Lane: {{ match2.lane }}</div>
+                    <div class="stat">Damage Dealt: {{ match2.totalDamageDealt }}</div>
+                    <div class="stat">Damage Taken: {{ match2.totalDamageTaken }}</div>
+                    <div class="stat">Minions Killed: {{ match2.totalMinionsKilled }}</div>
+                    <div class="stat">Wards Killed: {{ match2.wardsKilled }}</div>
+                    <div class="stat">Wards Placed: {{ match2.wardsPlaced }}</div>
+                </div>
+            </div>
         </div>
-        <div class="profile-info-item">
-            {% if match4 %}
-                <p>Pirmas match: {{ match4 }}</p>
-            {% else %}
-                <p>Nėra naujų matchų</p>
-            {% endif %}
+
+
+
+        <div class="match-box" style="background-color: {% if match3.win %}lightblue{% else %}lightcoral{% endif %}">
+            <div class="match-header">
+                <div class="champion-info">
+                    <img src="{% static 'images/championTiles/' %}{{ match3.championName }}_0.jpg">
+                    <div>
+                        <div class="champion-name">{{ match3.championName }}</div>
+                        <div class="champion-level">Level {{ match3.champLevel }}</div>
+                        <div class="match-duration">Duration: {{ match3.matchDurationMinutes }}m {{ match3.matchDurationSeconds }}s</div>
+                    </div>
+                </div>
+                <div class="outcome">
+                    {% if match3.win %}
+                        Won
+                    {% else %}
+                        Lost
+                    {% endif %}
+                </div>
+            </div>
+            <div class="match-details">
+                <div class="stats">
+                    <div class="stat">KDA: {{ match3.kills }}/{{ match3.deaths }}/{{ match3.assists }}</div>
+                    <div class="stat">Lane: {{ match3.lane }}</div>
+                    <div class="stat">Damage Dealt: {{ match3.totalDamageDealt }}</div>
+                    <div class="stat">Damage Taken: {{ match3.totalDamageTaken }}</div>
+                    <div class="stat">Minions Killed: {{ match3.totalMinionsKilled }}</div>
+                    <div class="stat">Wards Killed: {{ match3.wardsKilled }}</div>
+                    <div class="stat">Wards Placed: {{ match3.wardsPlaced }}</div>
+                </div>
+            </div>
         </div>
+
+
+        <div class="match-box" style="background-color: {% if match4.win %}lightblue{% else %}lightcoral{% endif %}">
+            <div class="match-header">
+                <div class="champion-info">
+                    <img src="{% static 'images/championTiles/' %}{{ match4.championName }}_0.jpg">
+                    <div>
+                        <div class="champion-name">{{ match4.championName }}</div>
+                        <div class="champion-level">Level {{ match4.champLevel }}</div>
+                        <div class="match-duration">Duration: {{ match4.matchDurationMinutes }}m {{ match4.matchDurationSeconds }}s</div>
+                    </div>
+                </div>
+                <div class="outcome">
+                    {% if match4.win %}
+                        Won
+                    {% else %}
+                        Lost
+                    {% endif %}
+                </div>
+            </div>
+            <div class="match-details">
+                <div class="stats">
+                    <div class="stat">KDA: {{ match4.kills }}/{{ match4.deaths }}/{{ match4.assists }}</div>
+                    <div class="stat">Lane: {{ match4.lane }}</div>
+                    <div class="stat">Damage Dealt: {{ match4.totalDamageDealt }}</div>
+                    <div class="stat">Damage Taken: {{ match4.totalDamageTaken }}</div>
+                    <div class="stat">Minions Killed: {{ match4.totalMinionsKilled }}</div>
+                    <div class="stat">Wards Killed: {{ match4.wardsKilled }}</div>
+                    <div class="stat">Wards Placed: {{ match4.wardsPlaced }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="match-box" style="background-color: {% if match5.win %}lightblue{% else %}lightcoral{% endif %}">
+            <div class="match-header">
+                <div class="champion-info">
+                    <img src="{% static 'images/championTiles/' %}{{ match5.championName }}_0.jpg">
+                    <div>
+                        <div class="champion-name">{{ match5.championName }}</div>
+                        <div class="champion-level">Level {{ match5.champLevel }}</div>
+                        <div class="match-duration">Duration: {{ match5.matchDurationMinutes }}m {{ match5.matchDurationSeconds }}s</div>
+                    </div>
+                </div>
+                <div class="outcome">
+                    {% if match5.win %}
+                        Won
+                    {% else %}
+                        Lost
+                    {% endif %}
+                </div>
+            </div>
+            <div class="match-details">
+                <div class="stats">
+                    <div class="stat">KDA: {{ match5.kills }}/{{ match5.deaths }}/{{ match5.assists }}</div>
+                    <div class="stat">Lane: {{ match5.lane }}</div>
+                    <div class="stat">Damage Dealt: {{ match5.totalDamageDealt }}</div>
+                    <div class="stat">Damage Taken: {{ match5.totalDamageTaken }}</div>
+                    <div class="stat">Minions Killed: {{ match5.totalMinionsKilled }}</div>
+                    <div class="stat">Wards Killed: {{ match5.wardsKilled }}</div>
+                    <div class="stat">Wards Placed: {{ match5.wardsPlaced }}</div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
+</div>
+
+    <style>
+
+        .match-duration {
+        font-size: 14px;
+        color: #777; /* Adjust color as needed */
+        }
+
+
+        .separator {
+        position: relative;
+        margin: 20px 0; /* Margin above and below the separator */
+        }
+
+        .separator-line {
+            border-top: 1px solid #ddd; /* Horizontal line */
+        }
+
+        .separator-label {
+            position: absolute;
+            top: -25px; /* Adjust to move the text above the line */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            padding: 5px 20px; /* Adjust padding as needed */
+            font-size: 18px; /* Adjust font size as needed */
+            color: #333; /* Adjust color as needed */
+            border: 2px solid #999; /* Add a border */
+            border-radius: 20px; /* Add border radius */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a shadow */
+        }
+
+        /* CSS styles go here */
+        .match-box {
+            background-color: lightblue; /* Blue by default */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+
+        .match-box.won {
+            background-color: lightblue !important;
+        }
+
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .champion-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .champion-name {
+            margin-right: 2px
+        }
+
+        .champion-level {
+            margin-left: 2px
+        }
+
+        .champion-info img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .champion-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .champion-level {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .outcome {
+            font-size: 18px;
+            font-weight: bold;
+            color: {% if match4.won %}#4CAF50{% else %}#F44336{% endif %}; /* Green for victory, red for defeat */
+        }
+
+        .match-details {
+            padding: 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .stat {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+    </style>
 
     <!-- Editing form (initially hidden) -->
     <form id="editProfileForm" style="display: none;" action="{% url 'profilis:save_profile_changes' %}" method="post">
