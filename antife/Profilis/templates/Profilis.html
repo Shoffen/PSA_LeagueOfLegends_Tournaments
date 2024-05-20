@@ -80,6 +80,21 @@
             {% endif %}
         </div>
 
+
+
+        <div class="separator">
+            <div class="separator-line"></div>
+            <div class="separator-label">Žaidėjo statistika</div>
+        </div>
+
+        <div class="summoner-box">
+        <div class="info"><strong>Tier:</strong> {{ tier }}</div>
+        <div class="info"><strong>Rank:</strong> {{ rank }}</div>
+        <div class="info"><strong>LP:</strong> {{ LP }}</div>
+        <div class="info"><strong>Wins:</strong> {{ wins }}</div>
+        <div class="info"><strong>Losses:</strong> {{ losses }}</div>
+        </div>
+
         <div class="separator">
             <div class="separator-line"></div>
             <div class="separator-label">Paskutiniai 5 matchai</div>
@@ -252,6 +267,25 @@
 </div>
 
     <style>
+
+        .summoner-box {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            max-width: 300px;
+            margin: 0 auto;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #829399;
+            color: #fff;
+        }
+        .summoner-box h2 {
+            margin-top: 0;
+        }
+        .summoner-box .info {
+            margin: 8px 0;
+        }
+
 
         .match-duration {
         font-size: 14px;

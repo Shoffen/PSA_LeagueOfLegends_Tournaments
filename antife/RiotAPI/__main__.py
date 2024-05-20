@@ -1,6 +1,6 @@
 from helpers import get_summoner_info, get_match_ids, get_player_statistics_in_match, get_account_by_riot_id
 
-summoner_name = "LAFLAMEIVN"
+summoner_name = "xIGORROx"
 tag_line = "EUNE"
 summoner_puuid = get_account_by_riot_id(summoner_name, tag_line)['puuid']
 print(summoner_puuid)
@@ -12,6 +12,9 @@ print(summoner_puuid)
 
 
 summoner = get_summoner_info(summoner_name, tag_line)
+
+print(summoner)
+
 if summoner:
     # Access the first dictionary in the list
     first_entry = summoner[0]

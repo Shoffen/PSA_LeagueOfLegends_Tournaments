@@ -45,8 +45,6 @@ def register(request):
         birthday = request.POST.get('birthday')
         password = request.POST.get('password')
 
-        summoner = get_summoner_info(lolname, "EUNE")
-
         if User.objects.filter(username=username):
             messages.error(request, 'Šis slapyvardis jau užimtas!')
             return render (request, 'register.html')
@@ -82,15 +80,25 @@ def register(request):
             hashed_password = make_password(password)
 
             # get puuid
-            puuid = get_account_by_riot_id(lolname, "EUNE")['puuid']
+            puuid = None
 
+            try:
+                puuid = get_account_by_riot_id(lolname, "EUNE")['puuid']
+                summoner = get_summoner_info(lolname, "EUNE")
+                print("Summoner Data:", summoner)  # Debug print to see the summoner object
 
+                if not summoner:
+                    raise ValueError('Summoner not found or API request failed.')
 
+                first_entry = summoner[0]
+                tier = first_entry.get('tier', 'unranked')
+                rank = first_entry.get('rank', 'unranked')
+                # Do something with tier and rank
 
-            first_entry = summoner[0]
-            tier = first_entry.get('tier', 'unranked')
-            rank = first_entry.get('rank', 'unranked')
-            
+            except (IndexError, ValueError, KeyError, TypeError) as e:
+                messages.error(request, 'Neegzistuoja toks League of Legends zaidejas.')
+                return render(request, 'register.html')
+
             # Save the user profile data to the database
             new_user_profile = Naudotojai(
                 user=user,  # Associate the profile with the newly created user

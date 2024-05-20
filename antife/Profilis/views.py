@@ -35,6 +35,8 @@ def profilisview(request):
             pavarde = naudotojas.pavarde
             telefonas = naudotojas.telefonas
             gimimo_Data = naudotojas.gimimo_data
+            tier = naudotojas.tier
+            rank = naudotojas.rank
 
             summoner = get_summoner_info(naudotojas.lolname, "EUNE")
 
@@ -44,6 +46,11 @@ def profilisview(request):
             for match_id in match_ids:
                 player_statistics = get_player_statistics_in_match(match_id, naudotojas.puuid)
                 matches.append(player_statistics)
+
+            first_entry = summoner[0]
+            LP = first_entry.get('leaguePoints', '0')
+            wins = first_entry.get('wins', '0')
+            loses = first_entry.get('loses', '0')
 
         except Naudotojai.DoesNotExist:
             # Handle the case where there's no related Naudotojai instance for the current user
@@ -56,6 +63,11 @@ def profilisview(request):
         'match3': matches[2],
         'match4': matches[3],
         'match5': matches[4],
+        'LP': LP,
+        'wins': wins,
+        'losses': loses,
+        'tier': tier,
+        'rank': rank,
         'username': username,
         'password': password,
         'vardas': vardas,
