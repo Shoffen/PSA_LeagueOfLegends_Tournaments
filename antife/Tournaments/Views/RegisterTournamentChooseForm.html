@@ -1,0 +1,27 @@
+<!-- RegisterTournamentChooseForm.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Registration Type</title>
+</head>
+<body>
+    <h1>Choose Registration Type</h1>
+    <button id="register-solo-btn">Register Solo</button>
+    <button id="register-team-btn">Register Team</button>
+
+    <script>
+        var soloUrl = "{% url 'tournaments:register_tournament_form_solo' tournament_id %}";
+        var teamUrl = "{% url 'tournaments:register_tournament_form_team' tournament_id %}";
+
+        document.getElementById("register-solo-btn").addEventListener("click", function() {
+            window.location.href = soloUrl;
+        });
+
+        document.getElementById("register-team-btn").addEventListener("click", function() {
+            window.location.href = teamUrl;
+        });
+    </script>
+</body>
+</html>
