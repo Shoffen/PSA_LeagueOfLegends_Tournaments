@@ -12,4 +12,5 @@ urlpatterns = [
    path('teams/', include('Teams.urls', namespace='teams')), 
    path('tournaments/', include('Tournaments.urls', namespace='tournaments')),
    path('baseLogged/', loged, name='loged'),
+   path('auth/', include('Authentication.urls', namespace='authentication')),
 ]

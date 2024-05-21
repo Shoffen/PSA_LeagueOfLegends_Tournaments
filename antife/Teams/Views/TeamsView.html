@@ -63,8 +63,6 @@
                         <td>{{ user_team.pavadinimas }}</td>
                         <td>
                             {% if user_team.id %}
-                                <a href="{% url 'teams:delete_team' user_team.id %}" class="btn btn-danger">Delete</a>
-                                <a href="{% url 'teams:edit_team' user_team.id %}" class="btn btn-primary">Edit</a>
                                 <a href="{% url 'teams:view_team' user_team.id %}" class="btn btn-primary">View</a>
                             {% endif %}
                         </td>

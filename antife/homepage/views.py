@@ -190,4 +190,4 @@ from django.shortcuts import redirect
 def logout_view(request):
     logout(request)
     request.session.flush()  # Clear all session data
-    return redirect('/')  # Redirect to the homepage or any other desired URL
+    return render(request, 'home.html')  # Redirect to the homepage or any other desired URL

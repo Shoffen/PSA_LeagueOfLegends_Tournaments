@@ -10,8 +10,7 @@ from django.shortcuts import render
 
 from antife.RiotAPI.helpers import get_player_statistics_in_match, get_summoner_info, get_match_ids
 
-
-def profilisview(request):
+def getUsersNewestStatistics(request):
     user_id = None
     username = None
     vardas = None
@@ -50,7 +49,7 @@ def profilisview(request):
             first_entry = summoner[0]
             LP = first_entry.get('leaguePoints', '0')
             wins = first_entry.get('wins', '0')
-            loses = first_entry.get('loses', '0')
+            losses = first_entry.get('losses', '0')
 
         except Naudotojai.DoesNotExist:
             # Handle the case where there's no related Naudotojai instance for the current user
@@ -65,7 +64,7 @@ def profilisview(request):
         'match5': matches[4],
         'LP': LP,
         'wins': wins,
-        'losses': loses,
+        'losses': losses,
         'tier': tier,
         'rank': rank,
         'username': username,
@@ -82,10 +81,51 @@ def profilisview(request):
     storage = messages.get_messages(request)
     storage.used = True
 
-    return render(request, 'Profilis.html', context)
+
+    return update(request, context)
 
 
-from django.contrib import messages
+def update(request, context):
+    return render(request, 'ProfileView.html', context)
+
+def OpenProfileView(request):
+    
+    return getUsersNewestStatistics(request)
+
+
+def submitEdit(request):
+    if request.method == 'POST':
+        # Retrieve form data from the request
+        username = request.POST.get('username')
+        vardas = request.POST.get('vardas')
+        pavarde = request.POST.get('pavarde')
+        telefonas = request.POST.get('telefonas')
+        el_pastas = request.POST.get('el_pastas')
+
+        # Retrieve the user's profile from the database
+        naudotojas = Naudotojai.objects.get(user=request.user)
+
+        error_messages = []  # Initialize a list to store error messag
+
+        if vardas:
+            naudotojas.vardas = vardas
+        if pavarde:
+            naudotojas.pavarde = pavarde
+        if telefonas:
+            if not re.match(r"\+370\d{8}$", telefonas):
+                error_messages.append('Neteisingai įvestas telefono numeris.  Įveskite iš naujo naudodami prefiksą +370')
+            else:
+                naudotojas.telefonas = telefonas
+        if el_pastas:
+            naudotojas.el_pastas = el_pastas
+        if username:
+            if User.objects.filter(username=username).exclude(pk=request.user.pk).exists():
+                error_messages.append('Šis slapyvardis jau užimtas')
+            else:
+                request.user.username = username
+                request.user.save()
+
+    return (request, 'ProfileView.html')
 
 def save_profile_changes(request):
     if request.method == 'POST':

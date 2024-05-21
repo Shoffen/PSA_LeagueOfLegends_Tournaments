@@ -3,34 +3,48 @@ from homepage.models import Naudotojai, Team
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-@login_required
 def openCreateForm(request):
-    # Check if the user already has a team
-    if Team.objects.filter(members=request.user.naudotojai).exists():
-        messages.error(request, 'You can only be a part of one team')
-        return redirect('teams:komandaview')
 
+    create_team_form(request)
+
+def submitData(request):
+   
     if request.method == 'POST':
         pavadinimas = request.POST.get('pavadinimas')
         if not pavadinimas:
             messages.error(request, 'Team title must be filled')
             return redirect('teams:teamsview')
 
-        naudotojai_instance = Naudotojai.objects.get(user=request.user)
+    return checkData(pavadinimas, request)
+       
 
-        # Check if the team name already exists
-        if Team.objects.filter(pavadinimas=pavadinimas).exists():
-            messages.error(request, 'Team title is already taken')
-        else:
-            team = Team.objects.create(pavadinimas=pavadinimas, fk_Naudotojasid_Naudotojas=naudotojai_instance)
-            team.members.add(naudotojai_instance)
-            messages.success(request, 'Team was successfully created')
-            return redirect('teams:teamsview')
-
-    return openteams(request)
+    
+def checkData(pavadinimas, request):
+    # Check if the user already has a team
+    if Team.objects.filter(members=request.user.naudotojai).exists():
+        messages.error(request, 'You can only be a part of one team')
+        return redirect('teams:komandaview')
+    naudotojai_instance = Naudotojai.objects.get(user=request.user)
+    # Check if the team name already exists
+    if Team.objects.filter(pavadinimas=pavadinimas).exists():
+        messages.error(request, 'Team title is already taken')
+    else:
+        return createAs(pavadinimas, naudotojai_instance, request)
+        
+    
+def createAs(pavadinimas, naudotojai_instance, request):
+    team = Team.objects.create(pavadinimas=pavadinimas, fk_Naudotojasid_Naudotojas=naudotojai_instance)
+    team.members.add(naudotojai_instance)
+    messages.success(request, 'Team was successfully created')
+    return redirect('teams:teamsview')
 
 @login_required
+def openCreateForm(request):
+    return create_team_form(request)
+   
+@login_required
 def create_team_form(request):
+  
     return render(request, 'CreateTeamForm.html')
 
 @login_required
@@ -50,6 +64,8 @@ def join_team(request, team_id):
     
     return redirect('teams:view_team', team_id=team_id)
 
+def checkRankRequirements(request, rank, requirement): 
+    return rank == requirement
 @login_required
 def leave_team(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
@@ -68,9 +84,12 @@ def openteams(request):
     return render(request, 'TeamsView.html', {'all_teams': all_teams, 'user_team': user_team})
 
 @login_required
-def view_team(request, team_id):
-    team = get_object_or_404(Team, id=team_id)
+def openTeamView(request, team_id):
+    team = getTeam(team_id)
     return render(request, 'SingleTeamView.html', {'team': team})
+
+def getTeam(team_id):
+    return get_object_or_404(Team, id=team_id)
 
 @login_required
 def deleteTeam(request, team_id):

@@ -78,10 +78,19 @@
         {% endif %}
       </ul>
       {% if request.user.is_authenticated %}
-      <button type="button" class="btn btn-primary custom-button" onclick="Loguot()">Logout</button>
+      <form action="{% url 'authentication:logout' %}" method="get">
+        <button type="submit" class="btn btn-primary">Logout</button>
+      </form>
       {% else %}
-      <button type="button" class="btn btn-primary custom-button" onclick="openLogin()">Login</button>
-      <button type="button" class="btn btn-primary custom-button" onclick="openRegister()">Register</button>
+      <form action="{% url 'authentication:login' %}" method="get">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+    
+      <form action="{% url 'authentication:register' %}" method="get">
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+    
+      
       {% endif %}
     </div>
   </nav>
