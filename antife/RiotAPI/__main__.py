@@ -1,6 +1,6 @@
 from helpers import get_summoner_info, get_match_ids, get_player_statistics_in_match, get_account_by_riot_id
 
-summoner_name = "xIGORROx"
+summoner_name = "incarnate"
 tag_line = "EUNE"
 summoner_puuid = get_account_by_riot_id(summoner_name, tag_line)['puuid']
 print(summoner_puuid)

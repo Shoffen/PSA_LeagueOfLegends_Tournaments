@@ -47,11 +47,16 @@ class Receptai(models.Model):
     baltymai = models.FloatField(default=0.0)
     aprasas = models.CharField(max_length=255)
 
+class TournamentTeam(models.Model):
+    fk_Naudotojasid_Naudotojas = models.ForeignKey(Naudotojai, on_delete=models.CASCADE, null=True)
+    users = models.ManyToManyField(Naudotojai, related_name='registered_in_tournament_team')
+
 class Tournament(models.Model):
     title = models.CharField(max_length=255)
     fk_Naudotojasid_Naudotojas = models.ForeignKey(Naudotojai, on_delete=models.CASCADE, null=True)
     rankRequirement = models.CharField(max_length=255, null=True)
-    registered_users = models.ManyToManyField(Naudotojai, related_name='registered_tournaments')
+    registered_users = models.ManyToManyField(Naudotojai, related_name='registered_tournaments_solo')
+    registered_teams = models.ManyToManyField(TournamentTeam, related_name='registered_tournaments_teams')
 
 
 

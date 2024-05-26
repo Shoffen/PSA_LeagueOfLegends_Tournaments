@@ -1,0 +1,72 @@
+<!-- RegisterTournamentChooseForm.html -->
+{% extends 'MainView.html' %}
+{% load static %}
+
+{% block title %}
+    Register Team
+{% endblock %}
+
+{% block content %}
+    <style>
+        .tournament-details {
+            margin-top: 20px;
+        }
+        .tournament-details th, .tournament-details td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tournament-details th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+<body>
+    <title>Register Team for Tournament</title>
+    <script>
+        function limitSelection() {
+            const checkboxes = document.querySelectorAll('input[name="members"]');
+            const maxSelection = 4;
+            let selectedCount = 0;
+
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedCount++;
+                }
+            });
+
+            checkboxes.forEach(checkbox => {
+                if (!checkbox.checked && selectedCount >= maxSelection) {
+                    checkbox.disabled = true;
+                } else {
+                    checkbox.disabled = false;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkboxes = document.querySelectorAll('input[name="members"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', limitSelection);
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Register Team for {{ tournament.title }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>Select up to 4 additional members:</p>
+        <ul>
+            {% for member in team_members %}
+            <li>
+                <label>
+                    <input type="checkbox" name="members" value="{{ member.id }}" onchange="limitSelection()">
+                    {{ member.user.username }} ({{ member.tier }})
+                </label>
+            </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Register Team</button>
+    </form>
+</body>
+{% endblock %}
