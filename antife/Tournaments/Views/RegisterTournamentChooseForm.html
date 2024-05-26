@@ -1,16 +1,31 @@
 <!-- RegisterTournamentChooseForm.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choose Registration Type</title>
-</head>
+{% extends 'MainView.html' %}
+{% load static %}
+
+{% block title %}
+    Choose registration type
+{% endblock %}
+
+{% block content %}
+    <style>
+        .tournament-details {
+            margin-top: 20px;
+        }
+        .tournament-details th, .tournament-details td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tournament-details th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
 <body>
-    <h1>Choose Registration Type</h1>
+    <div class="tournament-details">
+    <h1>Choose registration type</h1> 
     <button id="register-solo-btn">Register Solo</button>
     <button id="register-team-btn">Register Team</button>
-
+    </div>
     <script>
         var soloUrl = "{% url 'tournaments:register_tournament_form_solo' tournament_id %}";
         var teamUrl = "{% url 'tournaments:register_tournament_form_team' tournament_id %}";
@@ -24,4 +39,4 @@
         });
     </script>
 </body>
-</html>
+{% endblock %}

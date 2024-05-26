@@ -1,0 +1,37 @@
+<!-- RegisterTournamentChooseForm.html -->
+{% extends 'MainView.html' %}
+{% load static %}
+
+{% block title %}
+    Register Solo
+{% endblock %}
+
+{% block content %}
+    <style>
+        .tournament-details {
+            margin-top: 20px;
+        }
+        .tournament-details th, .tournament-details td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tournament-details th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+<body>
+    <div class="tournament-details">
+    <h1>Registration Confirmation</h1> 
+        <table>
+            <tr>
+                <th>Rank requirement</th>
+                <td>{{ tournament.rankRequirement }}</td>
+            </tr>
+        </table>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Register</button>
+    </form>
+</body>
+{% endblock %}

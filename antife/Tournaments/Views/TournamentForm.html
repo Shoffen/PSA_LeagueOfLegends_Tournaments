@@ -13,8 +13,21 @@
     <label for="title">Tournament Title:</label>
     <input type="text" id="title" name="title" required><br><br>
     
-    <label for="rankRequirement">Rank Requirement:</label>
-    <input type="text" id="rankRequirement" name="rankRequirement" required><br><br>
+    <label for="ranks">Rank requirement</label>
+
+<select name="rankRequirement" id="rankRequirement" required>
+  <option value="UNRANKED">UNRANKED</option>
+  <option value="IRON">IRON</option>
+  <option value="BRONZE">BRONZE</option>
+  <option value="SILVER">SILVER</option>
+  <option value="GOLD">GOLD</option>
+  <option value="PLATINUM">PLATINUM</option>
+  <option value="EMERALD">EMERALD</option>
+  <option value="DIAMOND">DIAMOND</option>
+  <option value="MASTER">MASTER</option>
+  <option value="GRANDMASTER">GRANDMASTER</option>
+  <option value="CHALLENGER">CHALLENGER</option>
+</select><br><br>
     
     <button type="submit">Create</button>
 </form>
