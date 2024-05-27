@@ -1,0 +1,29 @@
+{% extends 'MainView.html' %}
+{% load static %}
+
+{% block title %}
+    Score Board
+{% endblock %}
+
+{% block content %}
+
+        <h2>Registered Teams</h2>
+        <ul class="teams-list">
+            {% for team in tournament_teams %}
+                <li>{{ team.pavadinimas}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("register-btn").addEventListener("click", function() {
+                window.location.href = "{% url 'tournaments:register_choose_form' tournament.id %}";
+            });
+        });
+        function toggleScoreBoard() {
+            window.location.href = "{% url 'tournaments:score_board' tournament.id %}";
+        }
+    </script>
+    
+{% endblock %}

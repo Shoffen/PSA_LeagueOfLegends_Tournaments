@@ -12,6 +12,6 @@ urlpatterns = [
     path('register-choose/<int:tournament_id>/',TournamentController.openRegisterChooseForm, name='register_choose_form'),
     path('register-solo/<int:tournament_id>/', TournamentController.openRegisterFormSolo, name='register_tournament_form_solo'),
     path('register-team/<int:tournament_id>/', TournamentController.openRegisterFormTeam, name='register_tournament_form_team'),
+    path('score_board/<int:tournament_id>/', TournamentController.openScoreBoard, name='score_board'),
 
-    
 ]

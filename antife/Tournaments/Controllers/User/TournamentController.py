@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from homepage.models import Naudotojai, Tournament, Team, TournamentTeam
+#from homepage.models import Naudotojai, Tournament, Team, TournamentTeam
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django import forms
-from homepage.models import Naudotojai
+#from homepage.models import Naudotojai
 from django.utils import formats
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -20,6 +20,81 @@ from antife.RiotAPI.helpers import get_player_statistics_in_match, get_summoner_
 
 def getAllTournaments():
     return Tournament.objects.all()
+
+def getTeam(team_id):
+    team = get_object_or_404(Team, id=team_id)
+    return team
+
+
+def getAllTournamentTeams(tournament_id):
+    
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    tournament_teams = tournament.registered_teams.all()
+    teams = []
+    for team in tournament_teams:
+        teams.append(getTeam(team.id))
+    return teams
+
+def findTeams(teams, count):
+    cTeams = []
+    for team in teams:
+        if team.members.count() == count:
+            cTeams.append(team)
+    return cTeams
+    
+
+def removeFromWaiting(teams):
+    teams.remove(0)
+    return teams
+
+
+def makeScoreBoard(tournament_id):
+    teams = getAllTournamentTeams(tournament_id=tournament_id)
+    
+    approved_teams = []  
+    teams_of_two = findTeams(teams, 2)
+    teams_of_one = findTeams(teams, 1)
+    teams_of_three = findTeams(teams, 3)
+    teams_of_four = findTeams(teams, 4)
+
+    for team in teams:
+        if team.members.count() == 5:
+            approved_teams.append(team)
+        
+        if team.members.count() == 3 and teams_of_two:
+            team.members.add(*teams_of_two[0].members.all())
+            print(teams_of_two[0].id)
+            teams_of_two = teams_of_two[1:]
+            removeFromWaiting(teams_of_two)
+            approved_teams.append(team)
+
+        if team.members.count() == 4 and teams_of_one:
+            team.members.add(*teams_of_one[0].members.all())
+            teams_of_one = teams_of_one[1:]
+            removeFromWaiting(teams_of_one[0].id)
+            approved_teams.append(team)
+        
+
+        if team.members.count() == 3 and len(teams_of_one) > 1:
+            team.members.add(*teams_of_one[0].members.all())
+            team.members.add(*teams_of_one[1].members.all())
+            removeFromWaiting(teams_of_one[0].id)
+            removeFromWaiting(teams_of_one[1].id)
+            teams_of_one = teams_of_one[2:] 
+            approved_teams.append(team)
+        
+        if team.members.count() == 2 and teams_of_two and teams_of_one:
+            team.members.add(*teams_of_one[0].members.all())
+            team.members.add(*teams_of_two[0].members.all())
+            removeFromWaiting(teams_of_one[0].id)
+            removeFromWaiting(teams_of_two[0].id)
+            teams_of_one = teams_of_one[1:]  
+            teams_of_two = teams_of_two[1:] 
+            approved_teams.append(team)
+    
+    return approved_teams
+        
+
 
 @login_required
 def openTournaments(request):
@@ -89,11 +164,10 @@ def register(request, tournament_id):
 def participant_count(tournament_id):
     tournament = Tournament.objects.get(pk=tournament_id)
     total = tournament.registered_users.count()
-    
+
     for team in tournament.registered_teams.all():
-        registeredTeam = TournamentTeam.objects.get(pk=team)
-        total = total + registeredTeam.users.count()
-    
+        total += team.users.count()
+
     return total
 
 # views.py
@@ -103,6 +177,13 @@ from django.shortcuts import render
 def openRegisterChooseForm(request, tournament_id):
     
     return render(request, 'RegisterTournamentChooseForm.html', {'tournament_id': tournament_id})
+
+@login_required
+def openScoreBoard(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    tournament_teams = makeScoreBoard(tournament_id)
+    
+    return render(request, 'ScoreBoardForm.html', {'tournament': tournament, 'tournament_teams': tournament_teams})
 
 @login_required
 def openRegisterFormSolo(request, tournament_id):
@@ -138,7 +219,7 @@ def openRegisterFormTeam(request, tournament_id):
 
         selected_members = Naudotojai.objects.filter(id__in=selected_member_ids)
         all_members_valid = all(checkData(tournament.rankRequirement, member.tier) for member in selected_members)
-        if (participant_count(tournament_id) + selected_members.count()) >= tournament.max_participants:
+        if (selected_members.count()) >= tournament.max_participants:
             messages.error(request, 'Tournament is too full.')
         elif all_members_valid:
             tournament_team = TournamentTeam.objects.create(fk_Naudotojasid_Naudotojas=naudotojas)
@@ -187,3 +268,5 @@ def checkData(requiredRank, playerRank):
         return True
     else:
         return False
+
+makeScoreBoard(2)

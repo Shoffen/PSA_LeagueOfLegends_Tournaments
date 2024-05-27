@@ -44,6 +44,10 @@
             <a href="#" class="btn btn-success" id="register-btn">Register</a>
         {% endif %}
 
+        {% if request.user.is_authenticated and request.user.is_staff %}
+            <a href="{% url 'tournaments:score_board' tournament.id %}" class="btn btn-primary">Score Board</a>
+        {% endif %}
+
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -51,6 +55,9 @@
                 window.location.href = "{% url 'tournaments:register_choose_form' tournament.id %}";
             });
         });
+        function toggleScoreBoard() {
+            window.location.href = "{% url 'tournaments:score_board' tournament.id %}";
+        }
     </script>
     
 {% endblock %}
