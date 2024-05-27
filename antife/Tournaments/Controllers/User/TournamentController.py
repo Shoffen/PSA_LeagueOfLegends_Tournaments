@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect
-#from homepage.models import Naudotojai, Tournament, Team, TournamentTeam
+from homepage.models import Naudotojai, Tournament, Team, TournamentTeam
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django import forms
-#from homepage.models import Naudotojai
+from homepage.models import Naudotojai
 from django.utils import formats
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import redirect
-import re
+import requests
 from django.urls import reverse
 from datetime import datetime
 from django.shortcuts import render
@@ -268,5 +268,3 @@ def checkData(requiredRank, playerRank):
         return True
     else:
         return False
-
-makeScoreBoard(2)

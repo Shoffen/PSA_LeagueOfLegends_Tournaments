@@ -6,15 +6,24 @@
 {% endblock %}
 
 {% block content %}
-
-        <h2>Registered Teams</h2>
-        <ul class="teams-list">
+    <h2>Score Board</h2>
+    <table class="score-board">
+        <thead>
+            <tr>
+                <th>Position |</th>
+                <th>Team Name</th>
+            </tr>
+        </thead>
+        <tbody>
             {% for team in tournament_teams %}
-                <li>{{ team.pavadinimas}}</li>
+                <tr>
+                    <td>{{ forloop.counter }}</td> <!-- Assuming position is based on the order in the list -->
+                    <td>{{ team.pavadinimas }}</td>
+                </tr>
             {% endfor %}
-        </ul>
-    </div>
-
+        </tbody>
+    </table>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("register-btn").addEventListener("click", function() {
