@@ -11,5 +11,6 @@ urlpatterns = [
    path('profilis/', include('Profilis.urls', namespace='profilis')), 
    path('teams/', include('Teams.urls', namespace='teams')), 
    path('tournaments/', include('Tournaments.urls', namespace='tournaments')),
+   path('messages/', include('Messages.urls', namespace='messages')),
    path('baseLogged/', loged, name='loged'),
 ]

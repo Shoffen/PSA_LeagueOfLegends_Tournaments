@@ -32,14 +32,15 @@ def createTournament(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         rankRequirement = request.POST.get('rankRequirement')
-        
+        max_participants = request.POST.get('max_participants')
+
         if not title or not rankRequirement:
             messages.error(request, 'All fields are required.')
             return redirect('create_tournament')
 
         naudotojai_instance = Naudotojai.objects.get(user=request.user)
         
-        Tournament.objects.create(title=title, rankRequirement=rankRequirement, fk_Naudotojasid_Naudotojas=naudotojai_instance)
+        Tournament.objects.create(title=title, rankRequirement=rankRequirement, fk_Naudotojasid_Naudotojas=naudotojai_instance, max_participants=max_participants)
         messages.success(request, 'Tournament was successfully created.')
         return redirect('tournaments:tournamentsview')  # Redirect to a view that lists tournaments
     
@@ -53,10 +54,12 @@ def editTournament(request, tournament_id):
     if request.method == 'POST':
         title = request.POST.get('title')
         rankRequirement = request.POST.get('rankRequirement')
+        max_participants = request.POST.get('max_participants')
 
         if title and rankRequirement:
             tournament.title = title
             tournament.rankRequirement = rankRequirement
+            tournament.max_participants = max_participants
             tournament.save()
             messages.success(request, 'Tournament was successfully updated.')
             return redirect('tournaments:tournamentsview')
@@ -76,21 +79,22 @@ def register(request, tournament_id):
     user = request.user.naudotojai
     if user in tournament.registered_users.all():
         messages.warning(request, 'You are already registered for this tournament.')
+    elif participant_count(tournament_id) >= tournament.max_participants:
+        messages.warning(request, 'Tournament is full')
     else:
         tournament.registered_users.add(user)
         messages.success(request, 'You have successfully registered for the tournament.')
     return redirect('tournaments:tournamentsview')
 
-@login_required
-def registerTeam(request, tournament_id, users):
+def participant_count(tournament_id):
     tournament = Tournament.objects.get(pk=tournament_id)
-    user = request.user.naudotojai
-    if user in tournament.registered_users.all():
-        messages.warning(request, 'You are already registered for this tournament.')
-    else:
-        tournament.registered_users.add(user)
-        messages.success(request, 'You have successfully registered for the tournament.')
-    return redirect('tournaments:tournamentsview')
+    total = tournament.registered_users.count()
+    
+    for team in tournament.registered_teams.all():
+        registeredTeam = TournamentTeam.objects.get(pk=team)
+        total = total + registeredTeam.users.count()
+    
+    return total
 
 # views.py
 from django.shortcuts import render
@@ -134,8 +138,9 @@ def openRegisterFormTeam(request, tournament_id):
 
         selected_members = Naudotojai.objects.filter(id__in=selected_member_ids)
         all_members_valid = all(checkData(tournament.rankRequirement, member.tier) for member in selected_members)
-        
-        if all_members_valid:
+        if (participant_count(tournament_id) + selected_members.count()) >= tournament.max_participants:
+            messages.error(request, 'Tournament is too full.')
+        elif all_members_valid:
             tournament_team = TournamentTeam.objects.create(fk_Naudotojasid_Naudotojas=naudotojas)
             tournament_team.users.add(*selected_members)
             tournament.registered_teams.add(tournament_team)

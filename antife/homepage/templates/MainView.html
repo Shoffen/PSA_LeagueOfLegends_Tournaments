@@ -76,6 +76,16 @@
           <a class="nav-link" href="{% url 'profilis:profilisview' %}">Profile</a>
         </li>
         {% endif %}
+        {% if request.user.is_authenticated %}
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'profilis:user_list' %}">All Users</a>
+        </li>
+        {% endif %}
+        {% if request.user.is_authenticated and request.user.is_staff %}
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'messages:admin_reports_view' %}">Reports</a>
+        </li>
+        {% endif %}
       </ul>
       {% if request.user.is_authenticated %}
       <button type="button" class="btn btn-primary custom-button" onclick="Loguot()">Logout</button>

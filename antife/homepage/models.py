@@ -57,6 +57,7 @@ class Tournament(models.Model):
     rankRequirement = models.CharField(max_length=255, null=True)
     registered_users = models.ManyToManyField(Naudotojai, related_name='registered_tournaments_solo')
     registered_teams = models.ManyToManyField(TournamentTeam, related_name='registered_tournaments_teams')
+    max_participants = models.IntegerField(default=30)
 
 
 
@@ -117,3 +118,11 @@ class Recepto_produktai(models.Model):
     fk_Receptasid_Receptas = models.ForeignKey(Receptai, on_delete=models.CASCADE)
     fk_Produktasid_Produktas = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+
+class Messages(models.Model):
+    reporter = models.ForeignKey(Naudotojai, on_delete=models.CASCADE, related_name='sent_reports', null=True)
+    reported_profile = models.ForeignKey(Naudotojai, on_delete=models.CASCADE, related_name='received_reports', null=True)
+    message_text = models.CharField(max_length=1000)
+    action_taken = models.BooleanField(default=False)
+    action_text = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)

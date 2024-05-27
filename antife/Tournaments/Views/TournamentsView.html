@@ -50,7 +50,8 @@
                 <thead>
                     <tr>
                         <th>Tournament Title</th>
-                        <th>League points requirement</th>
+                        <th>Rank requirement</th>
+                        <th>Maximum number of participant</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -58,6 +59,7 @@
                     <tr>
                         <td>{{ user_tournament.title }}</td>
                         <td>{{ user_tournament.rankRequirement }}</td>
+                        <td>{{ user_tournament.max_participants }}</td>
                         <td>
                             {% if user_tournament.id %}
                                 <a href="{% url 'tournaments:edit_tournament' user_tournament.id %}" class="btn btn-primary">Edit</a>
@@ -85,7 +87,9 @@
         <thead>
             <tr>
                 <th>Tournament Title</th>
-                <th>League points requirement</th>
+                <th>Rank requirement</th>
+                <th>Maximum participants</th>
+                <th>Currently registered</th>
                 <th>Possible Action</th>
             </tr>
         </thead>
@@ -94,6 +98,7 @@
                 <tr>
                     <td>{{ tournament.title }}</td>
                     <td>{{ tournament.rankRequirement }}</td>
+                    <td>{{ tournament.max_participants }}</td>
                     <td>
                         <a href="{% url 'tournaments:view_tournament' tournament.id %}" class="btn btn-primary">View</a>
                     </td>

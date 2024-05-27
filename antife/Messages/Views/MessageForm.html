@@ -1,0 +1,40 @@
+{% extends 'MainView.html' %}
+{% load static %}
+{% block title %}
+    Send Report Message
+{% endblock %}
+{% load static %} 
+
+{% block content %}
+
+        <h1>Send Report Message</h1>
+    </div>
+
+    {% if messages %}
+        <div class="error-container">
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% elif message.tags == 'success' %}
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="profile-info" id="profileInfoContainer">
+        <form method="post">
+            {% csrf_token %}
+            <div class="profile-info-item">
+                <label for="message_text">Message:</label>
+                <textarea id="message_text" name="message_text" rows="4" cols="50" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

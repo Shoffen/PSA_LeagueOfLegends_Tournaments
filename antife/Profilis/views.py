@@ -157,4 +157,79 @@ def save_profile_changes(request):
         # Redirect back to the editing page with error messages
         return redirect(reverse('profilis:profilisview'))
 
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'UsersView.html', {'users': users})
+def user_profile_view(request, user_id):
+    user = User.objects.get(id=user_id)
+    user_id = None
+    username = None
+    vardas = None
+    matches = []
+    pavarde = None
+    telefonas = None
+    gimimo_Data = None
+    el_pastas = None
+    password = None
+    form_submitted = False  # Initialize form_submitted to False
 
+    if user.is_authenticated:
+        user_id = user.id
+        username = user.username
+        el_pastas = user.email
+        password = user.password
+        try:
+            # Retrieve the latest data from the database
+            naudotojas = Naudotojai.objects.get(user=user)
+            vardas = naudotojas.vardas
+            pavarde = naudotojas.pavarde
+            telefonas = naudotojas.telefonas
+            gimimo_Data = naudotojas.gimimo_data
+            tier = naudotojas.tier
+            rank = naudotojas.rank
+
+            summoner = get_summoner_info(naudotojas.lolname, "EUNE")
+
+            # gets match ids, count default value 5
+            match_ids = get_match_ids(naudotojas.lolname, "EUNE", 5)  # Get 5 match IDs
+
+            for match_id in match_ids:
+                player_statistics = get_player_statistics_in_match(match_id, naudotojas.puuid)
+                matches.append(player_statistics)
+
+            first_entry = summoner[0]
+            LP = first_entry.get('leaguePoints', '0')
+            wins = first_entry.get('wins', '0')
+            loses = first_entry.get('loses', '0')
+
+        except Naudotojai.DoesNotExist:
+            # Handle the case where there's no related Naudotojai instance for the current user
+            pass
+    formatted_gimimo_Data = formats.date_format(gimimo_Data, "Y-m-d") if gimimo_Data else ""
+    context = {
+        'user_id': user_id,
+        'match1': matches[0],
+        'match2': matches[1],
+        'match3': matches[2],
+        'match4': matches[3],
+        'match5': matches[4],
+        'LP': LP,
+        'wins': wins,
+        'losses': loses,
+        'tier': tier,
+        'rank': rank,
+        'username': username,
+        'password': password,
+        'vardas': vardas,
+        'pavarde': pavarde,
+        'telefonas': telefonas,
+        'gimimo_Data': formatted_gimimo_Data,
+        'el_pastas': el_pastas,
+        'form_submitted': form_submitted,
+        'show_report_button': True,  # Pass form_submitted to the template
+    }
+    
+    # Clear any existing messages
+    storage = messages.get_messages(request)
+    storage.used = True
+    return render(request, 'Profilis.html', context)

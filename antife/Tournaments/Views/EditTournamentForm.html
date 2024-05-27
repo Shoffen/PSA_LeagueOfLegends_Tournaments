@@ -33,9 +33,25 @@
             {% csrf_token %}
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" value="{{ tournament.title }}" required>
+
+            <label for="max_participants">Title:</label>
+            <input type="text" id="max_participants" name="max_participants" value="{{ tournament.max_participants }}" required>
             
-            <label for="rankRequirement">League points requirement:</label>
-            <input type="text" id="rankRequirement" name="rankRequirement" value="{{ tournament.rankRequirement }}" required>
+            <label for="rankRequirement">Rank requirement:</label>
+
+            <select name="rankRequirement" id="rankRequirement" required>
+                <option value="UNRANKED" {% if tournament.rankRequirement == "UNRANKED" %}selected{% endif %}>UNRANKED</option>
+                <option value="IRON" {% if tournament.rankRequirement == "IRON" %}selected{% endif %}>IRON</option>
+                <option value="BRONZE" {% if tournament.rankRequirement == "BRONZE" %}selected{% endif %}>BRONZE</option>
+                <option value="SILVER" {% if tournament.rankRequirement == "SILVER" %}selected{% endif %}>SILVER</option>
+                <option value="GOLD" {% if tournament.rankRequirement == "GOLD" %}selected{% endif %}>GOLD</option>
+                <option value="PLATINUM" {% if tournament.rankRequirement == "PLATINUM" %}selected{% endif %}>PLATINUM</option>
+                <option value="EMERALD" {% if tournament.rankRequirement == "EMERALD" %}selected{% endif %}>EMERALD</option>
+                <option value="DIAMOND" {% if tournament.rankRequirement == "DIAMOND" %}selected{% endif %}>DIAMOND</option>
+                <option value="MASTER" {% if tournament.rankRequirement == "MASTER" %}selected{% endif %}>MASTER</option>
+                <option value="GRANDMASTER" {% if tournament.rankRequirement == "GRANDMASTER" %}selected{% endif %}>GRANDMASTER</option>
+                <option value="CHALLENGER" {% if tournament.rankRequirement == "CHALLENGER" %}selected{% endif %}>CHALLENGER</option>
+            </select><br><br>
             
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </form>

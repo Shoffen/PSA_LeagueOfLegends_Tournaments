@@ -1,0 +1,44 @@
+{% extends 'MainView.html' %}
+{% block title %}
+    Admin Reports
+{% endblock %}
+{% block content %}
+    <h1>Reports</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Reporter</th>
+                <th>Reported Profile</th>
+                <th>Message</th>
+                <th>Action Taken</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+                <tr>
+                    <td>{{ report.reporter.username }}</td>
+                    <td>{{ report.reported_profile.username }}</td>
+                    <td>{{ report.message_text }}</td>
+                    <td>{{ report.action_taken }}</td>
+                    <td>{{ report.created_at }}</td>
+                    <td>
+                        {% if not report.action_taken %}
+                        <form action="{% url 'mark_report_handled' report.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Mark as Handled</button>
+                        </form>
+                        <form action="{% url 'ban_user' report.reported_profile.id report.id %}" method="post" style="margin-top: 10px;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Ban User</button>
+                        </form>
+                        {% else %}
+                            {{ report.action_text }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

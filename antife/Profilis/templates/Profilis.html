@@ -14,6 +14,9 @@
         <!-- Button to toggle edit mode -->
         <button type="button" class="btn btn-primary custom-button" id="editProfileBtn">Redaguoti</button>
     </div>
+    {% if show_report_button %}
+        <button type="button" class="btn btn-danger custom-button" id="reportProfileBtn">Pranešti</button>
+    {% endif %}
     {% if messages %}
         <div class="error-container">
             {% for message in messages %}

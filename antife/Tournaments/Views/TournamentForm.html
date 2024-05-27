@@ -12,6 +12,10 @@
     {% csrf_token %}
     <label for="title">Tournament Title:</label>
     <input type="text" id="title" name="title" required><br><br>
+
+    {% csrf_token %}
+    <label for="title">Maximum participants:</label>
+    <input type="text" id="max_participants" name="max_participants" required><br><br>
     
     <label for="ranks">Rank requirement</label>
 

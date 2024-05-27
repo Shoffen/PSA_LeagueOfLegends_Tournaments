@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'Profilis',
     'RiotAPI',
     'Tournaments',
+    'Messages',
     
 
 ]
@@ -78,6 +79,8 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'tournaments', 'templates', 'tournaments'),
             os.path.join(BASE_DIR, 'Teams', 'Views'),
             os.path.join(BASE_DIR, 'Tournaments', 'Views'),
+            os.path.join(BASE_DIR, 'Users', 'templates'),
+            os.path.join(BASE_DIR, 'Reports', 'Views'),
         ],
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,

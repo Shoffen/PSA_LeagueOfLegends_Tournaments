@@ -1,6 +1,6 @@
 from django.contrib import admin
 from import_export.admin import ImportExportActionModelAdmin
-from .models import Team, Naudotojai, Product, Receptai, Forumai, Irasai, Kraujo_tyrimai,Tournament, Recepto_produktai, Naudotojo_receptai, Megstamiausi_receptai, Valgiarasciai, Komentarai, Valgymai, Valgomas_produktas, Valgymo_receptas
+from .models import Team, Naudotojai, Product, Receptai, Forumai, Irasai, Kraujo_tyrimai,Tournament, Recepto_produktai, Naudotojo_receptai, Megstamiausi_receptai, Valgiarasciai, Komentarai, Valgymai, Valgomas_produktas, Valgymo_receptas, Messages
 
 admin.site.register(Product, ImportExportActionModelAdmin)
 admin.site.register(Naudotojai)
@@ -18,3 +18,4 @@ admin.site.register(Valgymo_receptas)
 admin.site.register(Megstamiausi_receptai)
 admin.site.register(Team)
 admin.site.register(Tournament)
+admin.site.register(Messages)
