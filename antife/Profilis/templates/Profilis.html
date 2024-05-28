@@ -15,7 +15,8 @@
         <button type="button" class="btn btn-primary custom-button" id="editProfileBtn">Redaguoti</button>
     </div>
     {% if show_report_button %}
-        <button type="button" class="btn btn-danger custom-button" id="reportProfileBtn">Pranešti</button>
+        <a href="{% url 'messages:send_message' user_id %}" class="btn btn-info">Pranešti</a>
+        
     {% endif %}
     {% if messages %}
         <div class="error-container">

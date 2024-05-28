@@ -95,14 +95,15 @@
         </thead>
         <tbody>
             {% for tournament in all_tournaments %}
-                <tr>
-                    <td>{{ tournament.title }}</td>
-                    <td>{{ tournament.rankRequirement }}</td>
-                    <td>{{ tournament.max_participants }}</td>
-                    <td>
-                        <a href="{% url 'tournaments:view_tournament' tournament.id %}" class="btn btn-primary">View</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ tournament.title }}</td>
+                <td>{{ tournament.rankRequirement }}</td>
+                <td>{{ tournament.max_participants }}</td>
+                <td>{{ tournament.participant_count }}</td>
+                <td>
+                    <a href="{% url 'tournaments:view_tournament' tournament.id %}" class="btn btn-primary">View</a>
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>

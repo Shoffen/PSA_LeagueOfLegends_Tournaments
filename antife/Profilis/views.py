@@ -160,9 +160,10 @@ def save_profile_changes(request):
 def user_list(request):
     users = User.objects.all()
     return render(request, 'UsersView.html', {'users': users})
+
 def user_profile_view(request, user_id):
-    user = User.objects.get(id=user_id)
-    user_id = None
+    user_n = User.objects.get(id=user_id)
+    user_id = user_id
     username = None
     vardas = None
     matches = []
@@ -173,20 +174,20 @@ def user_profile_view(request, user_id):
     password = None
     form_submitted = False  # Initialize form_submitted to False
 
-    if user.is_authenticated:
-        user_id = user.id
-        username = user.username
-        el_pastas = user.email
-        password = user.password
+    if user_n.is_authenticated:
+        username = user_n.username
+        el_pastas = user_n.email
+        password = user_n.password
         try:
             # Retrieve the latest data from the database
-            naudotojas = Naudotojai.objects.get(user=user)
+            naudotojas = Naudotojai.objects.get(user=user_n)
             vardas = naudotojas.vardas
             pavarde = naudotojas.pavarde
             telefonas = naudotojas.telefonas
             gimimo_Data = naudotojas.gimimo_data
             tier = naudotojas.tier
             rank = naudotojas.rank
+            
 
             summoner = get_summoner_info(naudotojas.lolname, "EUNE")
 

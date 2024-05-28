@@ -120,9 +120,7 @@ class Recepto_produktai(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
 
 class Messages(models.Model):
-    reporter = models.ForeignKey(Naudotojai, on_delete=models.CASCADE, related_name='sent_reports', null=True)
-    reported_profile = models.ForeignKey(Naudotojai, on_delete=models.CASCADE, related_name='received_reports', null=True)
+    reporter = models.ForeignKey(Naudotojai, on_delete=models.CASCADE, related_name='report_sender', null=True)
+    reported_profile= models.ForeignKey(Naudotojai, on_delete=models.CASCADE, related_name='report_topic', null=True)
     message_text = models.CharField(max_length=1000)
     action_taken = models.BooleanField(default=False)
-    action_text = models.CharField(max_length=255, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)

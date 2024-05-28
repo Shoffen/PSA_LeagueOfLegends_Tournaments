@@ -81,6 +81,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'Tournaments', 'Views'),
             os.path.join(BASE_DIR, 'Users', 'templates'),
             os.path.join(BASE_DIR, 'Reports', 'Views'),
+            os.path.join(BASE_DIR, 'Messages', 'Views'),
         ],
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,

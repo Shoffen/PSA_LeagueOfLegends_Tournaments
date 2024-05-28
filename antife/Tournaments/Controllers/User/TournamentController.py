@@ -98,9 +98,17 @@ def makeScoreBoard(tournament_id):
 
 @login_required
 def openTournaments(request):
+    all_tournaments = Tournament.objects.all()
+    
+    for tournament in all_tournaments:
+        participant_count = tournament.registered_users.count()
+        
+        for team in tournament.registered_teams.all():
+            participant_count += team.users.count()
+        
+        tournament.participant_count = participant_count
 
-    allTournaments = getAllTournaments()
-    return render(request, 'TournamentsView.html', {'all_tournaments': allTournaments})
+    return render(request, 'TournamentsView.html', {'all_tournaments': all_tournaments})
 
 @login_required
 def createTournament(request):
@@ -154,7 +162,7 @@ def register(request, tournament_id):
     user = request.user.naudotojai
     if user in tournament.registered_users.all():
         messages.warning(request, 'You are already registered for this tournament.')
-    elif participant_count(tournament_id) >= tournament.max_participants:
+    elif participant_count(tournament_id) > tournament.max_participants:
         messages.warning(request, 'Tournament is full')
     else:
         tournament.registered_users.add(user)
@@ -167,7 +175,11 @@ def participant_count(tournament_id):
 
     for team in tournament.registered_teams.all():
         total += team.users.count()
+<<<<<<< Updated upstream
 
+=======
+    
+>>>>>>> Stashed changes
     return total
 
 # views.py
@@ -219,7 +231,12 @@ def openRegisterFormTeam(request, tournament_id):
 
         selected_members = Naudotojai.objects.filter(id__in=selected_member_ids)
         all_members_valid = all(checkData(tournament.rankRequirement, member.tier) for member in selected_members)
+<<<<<<< Updated upstream
         if (selected_members.count()) >= tournament.max_participants:
+=======
+        
+        if (participant_count(tournament_id) + selected_members.count()) > tournament.max_participants:
+>>>>>>> Stashed changes
             messages.error(request, 'Tournament is too full.')
         elif all_members_valid:
             tournament_team = TournamentTeam.objects.create(fk_Naudotojasid_Naudotojas=naudotojas)
